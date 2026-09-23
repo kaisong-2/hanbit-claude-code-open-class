@@ -1,0 +1,1273 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta property="og:title" content="개발자 없이, 4시간 뒤엔 내 업무를 AI가 대신합니다">
+<meta property="og:description" content="한빛+ 클로드 코드 오픈 강좌 · 10/22 업무자동화 편 · 10/29 콘텐츠 제작 편">
+<meta property="og:image" content="https://hanbit-claude-code-open-class.vercel.app/hero-visual.webp">
+<link rel="icon" href="hanbit-logo.png">
+<title>한빛+ 클로드 코드 오픈 강좌</title>
+<meta name="description" content="개발자 없이, 4시간 뒤엔 내 업무를 AI가 대신합니다. 10/22 업무자동화 편 · 10/29 콘텐츠 제작 편.">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+KR:wght@400;500;700;900&display=swap">
+<style>
+/* ── 한빛 디자인 시스템 토큰 (Semantic) ─────────────────── */
+:root{
+  color-scheme: light;
+  --color-primary-normal:#03aea0;
+  --color-primary-strong:#009e91;
+  --color-primary-heavy:#028b80;
+  --color-primary-soft:rgba(3,174,160,.10);
+  --color-label-strong:#000000;
+  --color-label-normal:#030712;
+  --color-label-neutral:rgba(30,41,57,.88);
+  --color-label-alternative:rgba(62,74,92,.61);
+  --color-label-assistive:rgba(62,74,92,.28);
+  --color-bg-normal:#ffffff;
+  --color-bg-alternative:#f3f4f6;
+  --color-line-normal:rgba(92,102,118,.22);
+  --color-line-alternative:rgba(92,102,118,.08);
+  --color-fill-normal:rgba(92,102,118,.08);
+  --color-fill-strong:rgba(92,102,118,.16);
+  --color-status-positive:#00c950;
+  --color-status-cautionary:#ff6900;
+  --color-status-negative:#fb2c36;
+  --color-dimmer:rgba(3,7,18,.52);
+  /* Inverse (다크 섹션) */
+  --color-bg-inverse:#0a1311;
+  --color-bg-inverse-raised:#13201d;
+  --color-label-inverse:#eef4f3;
+  --color-label-inverse-alt:rgba(238,244,243,.62);
+  --color-line-inverse:rgba(238,244,243,.12);
+
+  --font-sans:Pretendard,"Noto Sans KR",-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  --font-mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,monospace;
+
+  --gutter:20px;
+  --container:1120px;
+  --section-y:72px;
+  --radius-s:12px;
+  --radius-l:20px;
+  --ease:cubic-bezier(.16,1,.3,1);
+}
+@media (min-width:768px){:root{--gutter:40px;--section-y:104px}}
+@media (min-width:1200px){:root{--section-y:128px}}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--color-bg-normal);color:var(--color-label-normal);font-family:var(--font-sans);font-size:16px;line-height:1.65;word-break:keep-all;overflow-wrap:break-word;padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
+@media (min-width:992px){body{padding-bottom:0}}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--color-primary-normal);outline-offset:3px;border-radius:6px}
+h1,h2,h3{margin:0;text-wrap:balance;letter-spacing:-.025em}
+p{margin:0}
+ul{margin:0;padding:0;list-style:none}
+
+.wrap{max-width:var(--container);margin-inline:auto;padding-inline:var(--gutter)}
+.section{padding-block:var(--section-y)}
+.section--alt{background:var(--color-bg-alternative)}
+.section--dark{background:var(--color-bg-inverse);color:var(--color-label-inverse)}
+
+.eyebrow{display:flex;align-items:center;gap:10px;font-family:var(--font-mono);font-size:12px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--color-primary-heavy)}
+.eyebrow::before{content:"";width:28px;height:1px;background:currentColor}
+.section--dark .eyebrow{color:var(--color-primary-normal)}
+.h2{font-size:30px;line-height:1.28;font-weight:800;margin-top:16px}
+.lead{margin-top:18px;max-width:40em;color:var(--color-label-neutral);font-size:17px}
+.section--dark .lead{color:var(--color-label-inverse-alt)}
+.hl{color:var(--color-primary-heavy)}
+.section--dark .hl{color:var(--color-primary-normal)}
+@media (min-width:768px){.h2{font-size:42px}.lead{font-size:18px}}
+
+/* 버튼 */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:52px;padding:0 26px;border-radius:14px;font-weight:700;font-size:16px;text-decoration:none;border:1px solid transparent;cursor:pointer;transition:transform .2s var(--ease),background .2s,border-color .2s}
+.btn:hover{transform:translateY(-1px)}
+.btn--primary{background:var(--color-primary-normal);color:#fff}
+.btn--primary:hover{background:var(--color-primary-strong)}
+.btn--primary:active{background:var(--color-primary-heavy)}
+.btn--ghost{background:var(--color-bg-normal);color:var(--color-label-normal);border-color:var(--color-line-normal)}
+.btn--ghost:hover{border-color:var(--color-label-alternative)}
+.btn--ink{background:var(--color-label-normal);color:#fff}
+
+/* ── Nav ─────────────────────────────────────── */
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:rgba(255,255,255,.88);backdrop-filter:saturate(1.4) blur(12px);-webkit-backdrop-filter:saturate(1.4) blur(12px);border-bottom:1px solid var(--color-line-alternative)}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;height:60px;gap:16px}
+.brand{display:flex;align-items:center;gap:12px;min-width:0}
+.logo{display:block;flex-shrink:0;line-height:0}
+.logo img{height:26px;width:auto}
+.brand-sub{display:none;padding-left:12px;border-left:1px solid var(--color-line-normal);font-family:var(--font-mono);font-size:12px;font-weight:600;letter-spacing:.08em;color:var(--color-primary-heavy);text-decoration:none;white-space:nowrap}
+@media (min-width:480px){.brand-sub{display:block}}
+.foot .logo img{height:24px}
+.nav-links{display:none;gap:28px;font-size:14px;color:var(--color-label-neutral)}
+.nav-links a{text-decoration:none}
+.nav-links a:hover{color:var(--color-label-normal)}
+.nav .btn{min-height:40px;padding:0 18px;font-size:14px;border-radius:999px}
+@media (min-width:992px){.nav-links{display:flex}}
+
+/* ── Hero ─────────────────────────────────────── */
+:root{
+  /* 히어로 전용 별칭 — 한빛 Primary 토큰에 연결 */
+  --hero-blue:var(--color-primary-heavy);
+  --hero-grid:rgba(3,174,160,.08);
+}
+.hero{position:relative;overflow:hidden;padding-block:40px 64px;background:
+  linear-gradient(90deg,var(--color-bg-normal) 0%,rgba(255,255,255,.6) 55%,rgba(255,255,255,0) 100%),
+  repeating-linear-gradient(0deg,var(--hero-grid) 0 1px,transparent 1px 80px),
+  repeating-linear-gradient(90deg,var(--hero-grid) 0 1px,transparent 1px 80px),
+  #f5fbfa}
+.hero-grid{display:grid;gap:40px;align-items:center}
+.hero-copy{min-width:0}
+.hero h1{margin-top:18px;font-size:40px;line-height:1.2;font-weight:900;letter-spacing:-.04em;color:var(--color-label-normal)}
+.hero .lead{font-size:17px}
+.hero-cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
+.hero-meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.chip{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 12px;border-radius:999px;background:var(--color-bg-normal);border:1px solid var(--color-line-normal);font-size:13px;font-weight:500;color:var(--color-label-neutral);white-space:nowrap}
+.chip s{color:var(--color-label-alternative)}
+.chip strong{color:var(--color-label-normal)}
+.chip--brand{border-color:transparent;background:var(--color-primary-soft);color:var(--color-primary-heavy)}
+@media (min-width:768px){.hero{padding-block:64px 96px}.hero h1{font-size:58px}}
+@media (min-width:1200px){.hero-grid{grid-template-columns:1.08fr .92fr;gap:56px}.hero h1{font-size:66px}}
+
+/* 헤드라인 애니메이션: 줄 단위로 밀려 올라오고 → 4시간 카운트 + 밑줄 → 업무 이름 타이핑 */
+.hl-line{display:block;overflow:hidden;padding-bottom:.06em}
+.hl-in{display:inline-block;animation:lineUp .9s var(--ease) both}
+.hl-line:nth-child(2) .hl-in{animation-delay:.12s}
+.hl-line:nth-child(3) .hl-in{animation-delay:.24s}
+@keyframes lineUp{from{transform:translateY(105%)}to{transform:none}}
+.four{position:relative;isolation:isolate;color:var(--hero-blue);white-space:nowrap}
+.four::after{content:"";position:absolute;z-index:-1;left:-.04em;right:-.04em;bottom:.06em;height:.3em;border-radius:.06em;background:rgba(3,174,160,.24);transform-origin:left;animation:drawLine .7s .9s var(--ease) both}
+@keyframes drawLine{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+.four .n{display:inline-block;min-width:.62em;text-align:center;font-variant-numeric:tabular-nums}
+.rot{display:inline-block;white-space:nowrap;color:#fff;background:var(--color-bg-inverse);padding:0 .14em;border-radius:.1em;line-height:1.12;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+.rot:empty{padding:0}
+.caret{display:inline-block;width:.07em;height:.9em;margin-left:.06em;vertical-align:-.08em;background:var(--hero-blue);animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.ai{background:linear-gradient(100deg,var(--color-primary-heavy) 0%,var(--color-primary-heavy) 40%,#7ee8dc 50%,var(--color-primary-heavy) 60%,var(--color-primary-heavy) 100%);background-size:260% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 3.2s 1.4s ease-in-out infinite}
+@keyframes shine{from{background-position:100% 0}to{background-position:0 0}}
+
+/* 키비주얼 */
+.kv{position:relative;margin:0;border-radius:var(--radius-l);overflow:hidden;box-shadow:0 40px 90px -40px rgba(10,19,17,.55);animation:kvIn 1.1s .2s var(--ease) both;max-width:100%}
+.kv img{display:block;width:100%;height:auto;aspect-ratio:804/941;object-fit:cover}
+@keyframes kvIn{from{transform:translateY(24px) scale(.98);opacity:.001}to{transform:none;opacity:1}}
+@media (min-width:768px) and (max-width:1199px){.kv{max-width:560px;margin-inline:auto}}
+
+
+/* 키비주얼 애니메이션 오버레이: 파일 → AI → 보고서 흐름 (viewBox = 이미지 원본 804×941) */
+.kv-fx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.kv-fx .flow{fill:none;stroke:#8ff0e4;stroke-width:5;stroke-linecap:round;stroke-dasharray:9 100;stroke-dashoffset:9;opacity:0;filter:drop-shadow(0 0 6px rgba(143,240,228,.95));animation:kvFlow 3.6s linear infinite}
+.kv-fx .flow:nth-of-type(2){animation-delay:.12s}
+.kv-fx .flow:nth-of-type(3){animation-delay:.24s}
+.kv-fx .flow:nth-of-type(4){animation-delay:.36s}
+.kv-fx .flow.out{animation-delay:1.25s;stroke-dasharray:22 100;stroke-dashoffset:22}
+.kv-fx .card{fill:none;stroke:#8ff0e4;stroke-width:3;opacity:0;animation:kvCard 3.6s ease-out infinite}
+.kv-fx .card:nth-of-type(2){animation-delay:.12s}
+.kv-fx .card:nth-of-type(3){animation-delay:.24s}
+.kv-fx .card:nth-of-type(4){animation-delay:.36s}
+.kv-fx .ring,.kv-fx .check{transform-box:fill-box;transform-origin:center}
+.kv-fx .ring{fill:none;stroke:#8ff0e4;stroke-width:4;opacity:0;animation:kvRing 3.6s ease-out infinite}
+.kv-fx .glow{fill:rgba(143,240,228,.35);opacity:0;filter:blur(14px);animation:kvGlow 3.6s ease-out infinite}
+.kv-fx .spark{fill:#fff;transform-box:fill-box;transform-origin:center;animation:kvSpark 3.6s ease-in-out infinite}
+.kv-fx .sheen{animation:kvSheen 3.6s var(--ease) infinite}
+.kv-fx .check{fill:none;stroke:#8ff0e4;stroke-width:4;opacity:0;animation:kvCheck 3.6s 1.9s ease-out infinite}
+.kv-fx .burst{stroke:#8ff0e4;stroke-width:5;stroke-linecap:round;opacity:0;animation:kvBurst 3.6s 1.9s ease-out infinite}
+@keyframes kvFlow{0%{stroke-dashoffset:9;opacity:0}3%{opacity:1}30%{stroke-dashoffset:-100;opacity:1}31%,100%{opacity:0}}
+@keyframes kvCard{0%{opacity:0}5%{opacity:.9}22%,100%{opacity:0}}
+@keyframes kvRing{0%,33%{opacity:0;transform:scale(1)}37%{opacity:.95;transform:scale(1)}60%,100%{opacity:0;transform:scale(1.32)}}
+@keyframes kvGlow{0%,33%{opacity:0}40%{opacity:1}70%,100%{opacity:0}}
+@keyframes kvSpark{0%,34%,100%{transform:scale(1) rotate(0)}42%{transform:scale(1.6) rotate(45deg)}52%{transform:scale(1) rotate(90deg)}}
+@keyframes kvSheen{0%,46%{transform:translateX(-300px)}70%,100%{transform:translateX(300px)}}
+@keyframes kvCheck{0%{opacity:.95;transform:scale(1)}30%,100%{opacity:0;transform:scale(1.7)}}
+@keyframes kvBurst{0%{opacity:0}6%{opacity:1}28%,100%{opacity:0}}
+@media (prefers-reduced-motion:reduce){.kv-fx{display:none}}
+/* 훅 카드: 매주 반복업무 × 52주 vs 강좌 4시간 */
+.hook{margin-top:30px;border:1px solid var(--color-line-normal);border-radius:var(--radius-l);background:var(--color-bg-normal);overflow:hidden;box-shadow:0 18px 40px -28px rgba(10,19,17,.35)}
+.hook-head{display:flex;justify-content:space-between;gap:12px;padding:12px 18px;border-bottom:1px solid var(--color-line-alternative);font-family:var(--font-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-label-alternative)}
+.hook-head b{color:var(--hero-blue);font-weight:600}
+.hook-body{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;padding:20px 18px 10px;text-align:center}
+.hook-k{font-family:var(--font-mono);font-size:11px;letter-spacing:.06em;color:var(--color-label-alternative)}
+.hook-v{display:block;margin-top:6px;font-family:var(--font-mono);font-variant-numeric:tabular-nums;font-size:34px;font-weight:600;letter-spacing:-.03em;line-height:1.1}
+.hook-v small{font-size:.45em;font-weight:500;margin-left:2px}
+.hook-v.is-cost{color:var(--color-label-normal)}
+.hook-v.is-gain{color:var(--hero-blue)}
+.hook-arrow{font-family:var(--font-mono);font-size:20px;color:var(--color-label-assistive)}
+.hook-bars{display:grid;gap:6px;padding:6px 18px 4px}
+.hook-bar{display:grid;grid-template-columns:78px 1fr;gap:10px;align-items:center;font-size:12px;color:var(--color-label-alternative)}
+.hook-bar i{display:block;height:8px;border-radius:4px;background:var(--color-label-normal);transition:width .7s var(--ease)}
+.hook-bar.is-class i{background:var(--hero-blue)}
+.hook-ctrl{display:flex;align-items:center;gap:12px;padding:12px 18px 4px;font-size:14px;color:var(--color-label-neutral)}
+.hook-ctrl label{white-space:nowrap}
+.hook-ctrl output{font-family:var(--font-mono);font-weight:600;color:var(--color-label-normal);min-width:3.2em;text-align:right}
+.hook-ctrl input{flex:1;min-width:0;accent-color:var(--hero-blue)}
+.hook-foot{padding:10px 18px 16px;font-size:14px;color:var(--color-label-neutral);text-align:center}
+.hook-foot b{color:var(--color-label-normal)}
+@media (min-width:768px){.hook-v{font-size:42px}}
+/* 훅 카드 등장 시퀀스 (.play 가 붙으면 실행) */
+.hook.play .hook-head{animation:fadeUp .5s var(--ease) both}
+.hook.play .hook-body>div:first-child .hook-v{animation:popIn .6s .15s cubic-bezier(.34,1.56,.64,1) both}
+.hook.play .hook-arrow{animation:vsIn .5s .45s var(--ease) both}
+.hook.play .hook-body>div:last-child{animation:fadeUp .5s .55s var(--ease) both}
+.hook.play .hook-bar{animation:fadeUp .45s var(--ease) both}
+.hook.play .hook-bar.is-class{animation-delay:.7s}
+.hook.play .hook-bar:not(.is-class){animation-delay:.8s}
+.hook.play .hook-ctrl{animation:fadeUp .45s 1s var(--ease) both}
+.hook.play .hook-foot{animation:fadeUp .45s 1.2s var(--ease) both}
+.hook-foot b{background:linear-gradient(transparent 62%,rgba(3,174,160,.26) 62%) no-repeat 0 0/100% 100%}
+.hook.play .hook-foot b{background-size:0% 100%;animation:markIn .8s 1.6s var(--ease) forwards}
+.hook-v.is-cost.bump{animation:bump .35s var(--ease)}
+.hook-ctrl input.nudge{animation:nudge 1.6s ease-in-out 2}
+@keyframes fadeUp{from{transform:translateY(10px);opacity:.001}to{transform:none;opacity:1}}
+@keyframes popIn{from{transform:scale(.4);opacity:.001}to{transform:none;opacity:1}}
+@keyframes vsIn{from{transform:rotate(-90deg) scale(.3);opacity:.001}to{transform:none;opacity:1}}
+@keyframes markIn{to{background-size:100% 100%}}
+@keyframes bump{40%{transform:scale(1.08)}}
+@keyframes nudge{0%,100%{filter:none}50%{filter:drop-shadow(0 0 6px rgba(3,174,160,.55))}}
+
+
+/* 타임카드: 목 13:30 → 목 17:30 → 금 09:00 */
+.timecard{margin-top:36px;border:1px solid var(--color-line-normal);border-radius:var(--radius-l);background:var(--color-bg-normal);overflow:hidden}
+.timecard-head{display:flex;justify-content:space-between;gap:12px;padding:12px 18px;border-bottom:1px solid var(--color-line-alternative);font-family:var(--font-mono);font-size:11px;letter-spacing:.08em;color:var(--color-label-alternative);text-transform:uppercase}
+.timecard-head b{color:var(--color-primary-heavy);font-weight:600}
+.timecard ol{list-style:none;margin:0;padding:18px;display:grid;gap:14px}
+.tc-step{display:grid;grid-template-columns:92px 1fr;gap:14px;align-items:baseline}
+.tc-time{font-family:var(--font-mono);font-variant-numeric:tabular-nums;font-size:13px;color:var(--color-label-alternative)}
+.tc-time b{display:block;font-size:22px;font-weight:600;color:var(--color-label-normal);letter-spacing:-.02em}
+.tc-step:last-child .tc-time b{color:var(--color-primary-heavy)}
+.tc-text{font-size:15px;color:var(--color-label-neutral)}
+.tc-text strong{display:block;color:var(--color-label-normal);font-size:16px}
+@media (min-width:768px){
+  .timecard ol{grid-template-columns:repeat(3,1fr);gap:0;padding:0}
+  .tc-step{display:block;padding:22px 20px;border-right:1px solid var(--color-line-alternative);position:relative}
+  .tc-step:last-child{border-right:0;background:var(--color-primary-soft)}
+  .tc-text{margin-top:10px}
+}
+
+/* 목업 플레이스홀더 (추후 이미지 교체) */
+.ph-note{font-family:var(--font-mono);font-size:11px;letter-spacing:.08em;color:var(--color-label-alternative);text-transform:uppercase}
+.mock{position:relative;border-radius:var(--radius-l);background:var(--color-bg-inverse);padding:14px;box-shadow:0 30px 80px -30px rgba(3,7,18,.45);max-width:100%}
+.mock-bar{display:flex;gap:6px;align-items:center;padding:4px 4px 14px}
+.mock-bar i{width:10px;height:10px;border-radius:50%;background:var(--color-line-inverse)}
+.mock-bar span{margin-left:auto;font-family:var(--font-mono);font-size:10px;letter-spacing:.1em;color:var(--color-label-inverse-alt)}
+.mock-body{display:grid;grid-template-columns:1fr;gap:12px}
+.mock-pane{border-radius:12px;background:var(--color-bg-inverse-raised);padding:16px;display:grid;gap:10px}
+.ln{height:9px;border-radius:5px;background:var(--color-line-inverse)}
+.ln.w90{width:90%}.ln.w75{width:75%}.ln.w60{width:60%}.ln.w45{width:45%}.ln.w30{width:30%}
+.ln.hl{background:var(--color-primary-normal);opacity:.85}
+.prompt{display:flex;gap:10px;align-items:center}
+.prompt::before{content:"›";font-family:var(--font-mono);color:var(--color-primary-normal);font-size:18px;line-height:1}
+.bars{display:flex;align-items:flex-end;gap:8px;height:92px;padding-top:6px}
+.bars i{flex:1;border-radius:6px 6px 2px 2px;background:var(--color-line-inverse)}
+.bars i.on{background:var(--color-primary-normal)}
+.mock-tag{display:inline-flex;align-self:start;height:24px;align-items:center;padding:0 10px;border-radius:999px;font-family:var(--font-mono);font-size:10px;letter-spacing:.06em;background:rgba(3,174,160,.18);color:var(--color-primary-normal)}
+.mock .ph-note{color:var(--color-label-inverse-alt);text-align:center;padding-top:12px}
+@media (min-width:768px){.mock-body{grid-template-columns:1.2fr 1fr}}
+
+/* ── Problem (dark) ───────────────────────────── */
+.pain-grid{display:grid;gap:14px;margin-top:44px}
+.pain{border:1px solid var(--color-line-inverse);border-radius:var(--radius-l);padding:26px;background:var(--color-bg-inverse-raised)}
+.pain q{display:block;font-size:18px;font-weight:700;line-height:1.5;quotes:"“" "”"}
+.pain p{margin-top:12px;color:var(--color-label-inverse-alt);font-size:15px}
+.reframe{margin-top:44px;padding-top:32px;border-top:1px solid var(--color-line-inverse);display:grid;gap:12px;max-width:44em}
+.reframe strong{font-size:22px;line-height:1.45;font-weight:800}
+.reframe p{color:var(--color-label-inverse-alt)}
+@media (min-width:768px){.pain-grid{grid-template-columns:repeat(3,1fr)}.reframe strong{font-size:26px}}
+
+/* ── Approach: 비교표 ─────────────────────────── */
+.compare{margin-top:44px;border-radius:var(--radius-l);overflow:hidden;border:1px solid var(--color-line-normal);background:var(--color-bg-normal)}
+.compare-row{display:grid;grid-template-columns:1fr 1fr}
+.compare-row>div{padding:16px 18px;font-size:15px;border-top:1px solid var(--color-line-alternative)}
+.compare-row>div:first-child{color:var(--color-label-alternative)}
+.compare-row>div:last-child{background:var(--color-primary-soft);font-weight:600}
+.compare-head>div{border-top:0!important;font-family:var(--font-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+.compare-head>div:last-child{color:var(--color-primary-heavy)}
+.compare-row>div:first-child s{text-decoration-color:var(--color-label-assistive)}
+@media (min-width:768px){.compare-row>div{padding:20px 28px;font-size:17px}}
+.core{margin-top:28px;font-size:16px;color:var(--color-label-neutral)}
+.core b{color:var(--color-label-normal)}
+
+/* ── 숫자 스트립 ─────────────────────────────── */
+.nums{display:grid;grid-template-columns:1fr 1fr;gap:1px;margin-top:44px;background:var(--color-line-normal);border:1px solid var(--color-line-normal);border-radius:var(--radius-l);overflow:hidden}
+.num{background:var(--color-bg-normal);padding:24px 20px}
+.num b{display:block;font-family:var(--font-mono);font-variant-numeric:tabular-nums;font-size:34px;font-weight:600;letter-spacing:-.03em;color:var(--color-label-normal);line-height:1.1}
+.num b em{font-style:normal;color:var(--color-primary-heavy)}
+.num span{display:block;margin-top:10px;font-size:14px;color:var(--color-label-neutral)}
+@media (min-width:992px){.nums{grid-template-columns:repeat(4,1fr)}.num{padding:32px 28px}.num b{font-size:44px}}
+
+/* ── Courses ─────────────────────────────────── */
+.course-grid{display:grid;gap:18px;margin-top:44px}
+.course{display:flex;flex-direction:column;border-radius:var(--radius-l);background:var(--color-bg-normal);border:1px solid var(--color-line-normal);overflow:hidden}
+.course-top{padding:26px 26px 22px;border-bottom:1px solid var(--color-line-alternative)}
+.course-date{font-family:var(--font-mono);font-size:13px;color:var(--color-label-alternative);font-variant-numeric:tabular-nums}
+.course-date b{color:var(--color-primary-heavy);font-weight:600}
+.course h3{margin-top:10px;font-size:24px;font-weight:800}
+.course-lv{display:inline-block;margin-left:8px;vertical-align:middle;font-family:var(--font-mono);font-size:11px;font-weight:500;letter-spacing:.06em;padding:3px 8px;border-radius:6px;background:var(--color-fill-normal);color:var(--color-label-neutral)}
+.course dl{margin:0;padding:6px 26px 4px;display:grid}
+.course dl>div{display:grid;gap:4px;padding:14px 0;border-bottom:1px solid var(--color-line-alternative)}
+.course dl>div:last-child{border-bottom:0}
+.course dt{font-family:var(--font-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-label-alternative)}
+.course dd{margin:0;font-size:15px;color:var(--color-label-neutral)}
+.course-foot{margin-top:auto;padding:20px 26px 26px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px;background:var(--color-bg-alternative)}
+.price{display:flex;align-items:baseline;gap:10px;font-variant-numeric:tabular-nums}
+.price s{color:var(--color-label-alternative);font-size:14px}
+.price b{font-size:26px;font-weight:800;letter-spacing:-.02em}
+.price small{font-size:12px;color:var(--color-label-alternative)}
+.course--two .course-top{background:var(--color-bg-inverse);color:var(--color-label-inverse)}
+.course--two .course-date{color:var(--color-label-inverse-alt)}
+.course--two .course-date b{color:var(--color-primary-normal)}
+.course--two .course-lv{background:var(--color-line-inverse);color:var(--color-label-inverse-alt)}
+.bundle{margin-top:18px;border-radius:var(--radius-l);border:1.5px dashed var(--color-primary-normal);padding:22px 26px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;background:var(--color-bg-normal)}
+.bundle p{font-size:15px;color:var(--color-label-neutral)}
+.bundle p strong{display:block;font-size:18px;color:var(--color-label-normal)}
+.bundle .save{color:var(--color-primary-heavy);font-weight:700}
+.note{margin-top:18px;font-size:14px;color:var(--color-label-alternative)}
+@media (min-width:992px){.course-grid{grid-template-columns:1fr 1fr}}
+
+/* ── Bonus: 참가자 특전 + 영수증 ──────────────── */
+.bonus-grid{display:grid;gap:14px;margin-top:44px}
+.bonus{display:flex;flex-direction:column;gap:14px;border-radius:var(--radius-l);background:var(--color-bg-normal);border:1px solid var(--color-line-normal);padding:22px}
+.bonus-k{display:flex;justify-content:space-between;gap:10px;font-family:var(--font-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase}
+.bonus-k b{color:var(--color-primary-heavy);font-weight:600}
+.bonus-k span{color:var(--color-label-alternative)}
+.bonus h3{font-size:20px;font-weight:800;line-height:1.4}
+.bonus p{font-size:15px;color:var(--color-label-neutral)}
+.bonus ul{display:grid;gap:6px;margin-top:auto;padding-top:14px;border-top:1px solid var(--color-line-alternative)}
+.bonus li{font-size:14px;color:var(--color-label-neutral);display:grid;grid-template-columns:14px 1fr;gap:8px}
+.bonus li::before{content:"·";font-weight:900;color:var(--color-primary-heavy)}
+/* 문서 목업 (추후 이미지 교체) */
+.doc{position:relative;height:150px;border-radius:12px;background:var(--color-bg-alternative);overflow:hidden;display:grid;place-items:center}
+.doc-sheet{width:62%;height:118px;border-radius:8px;background:var(--color-bg-normal);box-shadow:0 10px 24px -12px rgba(3,7,18,.25);padding:14px;display:grid;gap:7px;align-content:start;transform:rotate(-3deg)}
+.doc-sheet .ln{background:var(--color-fill-strong);height:7px}
+.doc-sheet .ln.hl{background:var(--color-primary-normal)}
+.doc-sheet.grid{grid-template-columns:1fr 1fr;transform:rotate(2deg)}
+.doc-sheet.grid i{height:30px;border-radius:5px;background:var(--color-fill-normal)}
+.doc-sheet.grid i:nth-child(1){background:var(--color-primary-soft)}
+.doc .ph-note{position:absolute;bottom:8px;left:0;right:0;text-align:center;font-size:10px}
+@media (min-width:992px){.bonus-grid{grid-template-columns:repeat(3,1fr)}}
+
+.receipt{margin:44px auto 0;max-width:520px;background:var(--color-bg-normal);border-radius:6px;padding:28px 26px 30px;font-family:var(--font-mono);font-size:13px;color:var(--color-label-neutral);box-shadow:0 20px 50px -24px rgba(3,7,18,.28);
+  -webkit-mask:radial-gradient(circle 7px at 50% 100%,transparent 6.5px,#000 7px) bottom/18px 100% repeat-x;mask:radial-gradient(circle 7px at 50% 100%,transparent 6.5px,#000 7px) bottom/18px 100% repeat-x;padding-bottom:40px}
+.receipt h3{font-family:var(--font-mono);font-size:13px;font-weight:600;letter-spacing:.14em;text-align:center;color:var(--color-label-normal)}
+.receipt .meta{text-align:center;margin-top:4px;font-size:11px;color:var(--color-label-alternative)}
+.receipt ul{margin-top:18px;border-top:1px dashed var(--color-line-normal);padding-top:14px;display:grid;gap:9px}
+.receipt li{display:flex;justify-content:space-between;gap:12px;font-variant-numeric:tabular-nums}
+.receipt li span:first-child{font-family:var(--font-sans);font-size:14px;color:var(--color-label-normal)}
+.receipt li span:last-child{white-space:nowrap;color:var(--color-label-alternative)}
+.receipt li.is-bonus span:last-child{color:var(--color-primary-heavy);font-weight:600}
+.receipt .total{margin-top:16px;padding-top:14px;border-top:1px dashed var(--color-line-normal);display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.receipt .total>span{font-size:12px;letter-spacing:.1em}
+.receipt .total b{font-size:24px;font-weight:600;color:var(--color-label-normal);letter-spacing:-.02em}
+.receipt .total s{margin-right:8px;font-size:13px;font-weight:400;color:var(--color-label-alternative)}
+
+/* ── Tabs ────────────────────────────────────── */
+.tabs{display:inline-flex;gap:4px;padding:4px;margin-top:36px;border-radius:14px;background:var(--color-fill-normal);max-width:100%;overflow-x:auto}
+.tab{appearance:none;border:0;background:transparent;font:inherit;font-size:15px;font-weight:600;color:var(--color-label-alternative);padding:10px 16px;border-radius:10px;cursor:pointer;white-space:nowrap}
+.tab[aria-selected="true"]{background:var(--color-bg-normal);color:var(--color-label-normal);box-shadow:0 1px 2px rgba(3,7,18,.08)}
+.tab small{font-family:var(--font-mono);font-weight:500;margin-right:6px;color:var(--color-primary-heavy)}
+
+/* ── Curriculum timeline ─────────────────────── */
+.tl{margin-top:28px;border-top:1px solid var(--color-line-normal)}
+.tl-row{display:grid;grid-template-columns:1fr;gap:6px;padding:20px 0;border-bottom:1px solid var(--color-line-alternative)}
+.tl-time{font-family:var(--font-mono);font-variant-numeric:tabular-nums;font-size:13px;color:var(--color-label-alternative)}
+.tl-title{font-size:18px;font-weight:700}
+.tl-desc{font-size:15px;color:var(--color-label-neutral)}
+.tl-row.is-opt .tl-title,.tl-row.is-break .tl-title{color:var(--color-label-alternative);font-weight:600}
+.tl-row.is-key .tl-title::after{content:"솔라";display:inline-block;margin-left:8px;vertical-align:2px;font-family:var(--font-mono);font-size:10px;font-weight:600;letter-spacing:.06em;padding:3px 7px;border-radius:6px;background:var(--color-primary-soft);color:var(--color-primary-heavy)}
+@media (min-width:768px){.tl-row{grid-template-columns:150px 280px 1fr;gap:24px;align-items:baseline}}
+.tl-goal{margin-top:24px;font-size:15px;color:var(--color-label-alternative)}
+
+/* ── Projects ────────────────────────────────── */
+.proj-grid{display:grid;gap:14px;margin-top:28px}
+.proj{border-radius:var(--radius-l);background:var(--color-bg-normal);border:1px solid var(--color-line-normal);padding:24px;display:flex;flex-direction:column;gap:14px}
+.proj h3{font-size:19px;font-weight:800;line-height:1.4}
+.ba{display:grid;gap:6px;font-size:14px}
+.ba div{display:grid;grid-template-columns:52px 1fr;gap:8px}
+.ba dt,.ba .k{font-family:var(--font-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-label-alternative);padding-top:2px}
+.ba .v{color:var(--color-label-neutral)}
+.ba .after .k{color:var(--color-primary-heavy)}
+.ba .after .v{color:var(--color-label-normal);font-weight:600}
+.ladder{display:grid;gap:6px;margin-top:auto;padding-top:14px;border-top:1px solid var(--color-line-alternative)}
+.ladder li{display:grid;grid-template-columns:26px 1fr;gap:10px;font-size:14px;color:var(--color-label-neutral);align-items:baseline}
+.ladder li b{font-family:var(--font-mono);font-size:11px;font-weight:600;text-align:center;border-radius:6px;padding:2px 0;background:var(--color-fill-normal);color:var(--color-label-neutral)}
+.ladder li:nth-child(3) b{background:var(--color-label-normal);color:#fff}
+.proj-thumb{border-radius:12px;background:var(--color-bg-alternative);overflow:hidden;line-height:0}
+.proj-thumb svg{display:block;width:100%;height:auto;font-family:var(--font-sans)}
+/* 결과 화면 일러스트 팔레트 (한빛 토큰) */
+.proj-thumb .bg{fill:var(--color-bg-normal)}
+.proj-thumb .alt{fill:var(--color-bg-alternative)}
+.proj-thumb .ink{fill:var(--color-label-normal)}
+.proj-thumb .dark{fill:var(--color-bg-inverse)}
+.proj-thumb .pri{fill:var(--color-primary-normal)}
+.proj-thumb .heavy{fill:var(--color-primary-heavy)}
+.proj-thumb .soft{fill:rgba(3,174,160,.16)}
+.proj-thumb .sl{fill:var(--color-fill-strong)}
+.proj-thumb .lt{fill:var(--color-fill-normal)}
+.proj-thumb .neg{fill:var(--color-status-negative)}
+.proj-thumb .cau{fill:var(--color-status-cautionary)}
+.proj-thumb .edge{fill:none;stroke:var(--color-line-normal);stroke-width:1}
+.proj-thumb .wire{fill:none;stroke:var(--color-primary-normal);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.proj-thumb .wire-m{fill:none;stroke:var(--color-label-assistive);stroke-width:1.5;stroke-dasharray:3 3}
+.proj-thumb .tx{fill:var(--color-label-normal);font-size:10px;font-weight:700}
+.proj-thumb .tm{fill:var(--color-label-alternative);font-size:8px;font-family:var(--font-mono)}
+.proj-thumb .tw{fill:#fff;font-size:9px;font-weight:700}
+.proj-thumb .tp{fill:var(--color-primary-heavy);font-size:9px;font-weight:700}
+.legend{display:flex;flex-wrap:wrap;gap:16px;margin-top:20px;font-size:13px;color:var(--color-label-alternative)}
+.legend b{font-family:var(--font-mono);font-weight:600;color:var(--color-label-normal)}
+@media (min-width:768px){.proj-grid{grid-template-columns:1fr 1fr}}
+@media (min-width:1200px){.proj-grid{grid-template-columns:repeat(3,1fr)}}
+.proj--cta{background:var(--color-bg-inverse);color:var(--color-label-inverse);border-color:transparent;justify-content:space-between}
+.proj--cta p{color:var(--color-label-inverse-alt);font-size:15px}
+.proj--cta h3{font-size:22px}
+
+/* ── Provide (pillars) ───────────────────────── */
+.pillars{display:grid;gap:14px;margin-top:44px}
+.pillar{border-radius:var(--radius-l);border:1px solid var(--color-line-normal);padding:28px;background:var(--color-bg-normal);display:flex;flex-direction:column;gap:12px}
+.pillar-k{font-family:var(--font-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-label-alternative)}
+.pillar h3{font-size:22px;font-weight:800}
+.pillar p{color:var(--color-label-neutral);font-size:15px}
+.pillar .big{font-family:var(--font-mono);font-size:15px;color:var(--color-primary-heavy);font-weight:600}
+.pillar--solar{background:var(--color-bg-inverse);color:var(--color-label-inverse);border-color:transparent}
+.pillar--solar p{color:var(--color-label-inverse-alt)}
+.pillar--solar .pillar-k{color:var(--color-primary-normal)}
+.pillar--solar .callout{margin-top:6px;padding:14px 16px;border-radius:12px;background:rgba(3,174,160,.14);color:var(--color-label-inverse);font-weight:700;font-size:15px}
+@media (min-width:992px){.pillars{grid-template-columns:1.3fr 1fr 1fr}}
+
+/* ── Coaches ─────────────────────────────────── */
+.coach-grid{display:grid;gap:18px;margin-top:44px}
+.coach{display:grid;grid-template-columns:96px 1fr;gap:20px;align-items:start;padding:24px;border-radius:var(--radius-l);background:var(--color-bg-normal);border:1px solid var(--color-line-normal)}
+.avatar{width:96px;height:96px;border-radius:50%;background:
+  repeating-linear-gradient(135deg,var(--color-fill-normal) 0 8px,transparent 8px 16px),var(--color-bg-alternative);display:grid;place-items:center;text-align:center;line-height:1.3}
+.avatar .ph-note{font-size:9px}
+.coach-role{font-family:var(--font-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-primary-heavy)}
+.coach h3{margin-top:4px;font-size:22px;font-weight:800}
+.coach p{margin-top:10px;font-size:15px;color:var(--color-label-neutral)}
+.coach .todo{margin-top:12px;font-size:13px;color:var(--color-label-alternative);border-left:2px solid var(--color-line-normal);padding-left:10px}
+@media (min-width:992px){.coach-grid{grid-template-columns:1fr 1fr}.coach{grid-template-columns:128px 1fr;padding:32px}.avatar{width:128px;height:128px}}
+
+/* ── For whom ────────────────────────────────── */
+.who{display:grid;gap:18px;margin-top:44px}
+.who-col{border-radius:var(--radius-l);padding:28px;border:1px solid var(--color-line-normal)}
+.who-col h3{font-size:18px;font-weight:800;display:flex;align-items:center;gap:10px}
+.who-col ul{margin-top:16px;display:grid;gap:12px}
+.who-col li{display:grid;grid-template-columns:22px 1fr;gap:10px;font-size:16px;color:var(--color-label-neutral)}
+.who-col li::before{font-family:var(--font-mono);font-weight:600}
+.who-yes{background:var(--color-primary-soft);border-color:transparent}
+.who-yes li::before{content:"✓";color:var(--color-primary-heavy)}
+.who-no li::before{content:"–";color:var(--color-label-alternative)}
+@media (min-width:992px){.who{grid-template-columns:1.2fr 1fr}}
+
+/* ── References placeholder ──────────────────── */
+.refs{display:grid;gap:14px;margin-top:44px}
+.ref{min-height:160px;border-radius:var(--radius-l);border:1.5px dashed var(--color-line-normal);display:grid;place-items:center;text-align:center;padding:24px;background:var(--color-bg-normal)}
+.ref .ph-note{line-height:1.8}
+.trust{margin-top:24px;font-size:15px;color:var(--color-label-neutral)}
+@media (min-width:768px){.refs{grid-template-columns:repeat(3,1fr)}}
+
+/* ── Prepare ─────────────────────────────────── */
+.prep{margin-top:44px;display:grid;gap:1px;background:var(--color-line-normal);border:1px solid var(--color-line-normal);border-radius:var(--radius-l);overflow:hidden}
+.prep>div{display:grid;gap:6px;padding:22px 24px;background:var(--color-bg-normal)}
+.prep dt{font-weight:800;font-size:17px}
+.prep dd{margin:0;color:var(--color-label-neutral);font-size:15px}
+.prep dd b{color:var(--color-label-normal)}
+.prep dd a{color:var(--color-primary-heavy)}
+@media (min-width:768px){.prep>div{grid-template-columns:200px 1fr;gap:24px;padding:24px 32px}}
+
+/* ── FAQ ─────────────────────────────────────── */
+.faq{margin-top:44px;border-top:1px solid var(--color-line-normal)}
+.faq details{border-bottom:1px solid var(--color-line-normal)}
+.faq summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:40px 1fr 24px;gap:8px;align-items:baseline;padding:22px 0;font-size:17px;font-weight:700}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary .q{font-family:var(--font-mono);font-size:13px;color:var(--color-primary-heavy)}
+.faq summary::after{content:"+";font-family:var(--font-mono);font-size:20px;color:var(--color-label-alternative);text-align:right;transition:transform .25s var(--ease)}
+.faq details[open] summary::after{transform:rotate(45deg)}
+.faq .a{padding:0 32px 24px 48px;color:var(--color-label-neutral);font-size:15px;max-width:48em}
+
+/* ── Final CTA ───────────────────────────────── */
+.final h2{font-size:32px;line-height:1.3;font-weight:900}
+.final-grid{display:grid;gap:14px;margin-top:40px}
+.final-card{border-radius:var(--radius-l);background:var(--color-bg-inverse-raised);border:1px solid var(--color-line-inverse);padding:24px;display:flex;flex-direction:column;gap:14px}
+.final-card .course-date{color:var(--color-label-inverse-alt)}
+.final-card .course-date b{color:var(--color-primary-normal)}
+.final-card h3{font-size:20px;font-weight:800}
+.final-card .price s{color:var(--color-label-inverse-alt)}
+.final-card .price small{color:var(--color-label-inverse-alt)}
+.final-card .btn{margin-top:auto;width:100%}
+.final-card--bundle{border-color:var(--color-primary-normal)}
+.seats{display:flex;flex-wrap:wrap;gap:8px 20px;margin-top:28px;font-size:14px;color:var(--color-label-inverse-alt)}
+.seats b{color:var(--color-label-inverse)}
+@media (min-width:768px){.final h2{font-size:48px}}
+@media (min-width:992px){.final-grid{grid-template-columns:repeat(3,1fr)}}
+
+/* ── Footer ──────────────────────────────────── */
+.foot{padding-block:40px;font-size:13px;color:var(--color-label-alternative);border-top:1px solid var(--color-line-alternative)}
+.foot .wrap{display:grid;gap:8px}
+.foot b{color:var(--color-label-neutral)}
+
+/* ── 모바일 하단 고정 CTA ─────────────────────── */
+.dock{position:fixed;left:0;right:0;bottom:0;z-index:30;padding:12px var(--gutter) calc(12px + env(safe-area-inset-bottom,0px));background:rgba(255,255,255,.94);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid var(--color-line-normal);display:flex;align-items:center;justify-content:space-between;gap:12px}
+.dock .price b{font-size:20px}
+.dock .btn{min-height:46px;padding:0 20px;flex-shrink:0}
+@media (min-width:992px){.dock{display:none}}
+
+/* 등장 모션: 정지 상태가 기본, JS가 붙을 때만 살짝 올라옴 */
+.rise{animation:rise .6s var(--ease) both}
+@keyframes rise{from{transform:translateY(14px);opacity:.001}to{transform:none;opacity:1}}
+.hero .rise:nth-child(2){animation-delay:.06s}.hero .rise:nth-child(3){animation-delay:.12s}.hero .rise:nth-child(4){animation-delay:.18s}.hero .rise:nth-child(5){animation-delay:.24s}.hero .rise:nth-child(6){animation-delay:.3s}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<!-- ═════════ NAV ═════════ -->
+<nav class="nav" aria-label="주요 메뉴">
+  <div class="wrap">
+    <div class="brand">
+      <a class="logo" href="https://www.hanbit.co.kr/" target="_blank" rel="noopener" aria-label="한빛+ 홈페이지로 이동"><img src="hanbit-logo.png" alt="한빛+" width="1042" height="333"></a>
+      <a class="brand-sub" href="#top">CLAUDE CODE OPEN CLASS</a>
+    </div>
+    <div class="nav-links">
+      <a href="#approach">강좌 방식</a>
+      <a href="#courses">과정 비교</a>
+      <a href="#bonus">참가자 특전</a>
+      <a href="#curriculum">커리큘럼</a>
+      <a href="#projects">예시 프로젝트</a>
+      <a href="#faq">FAQ</a>
+    </div>
+    <a class="btn btn--primary" href="#apply">신청하기</a>
+  </div>
+</nav>
+
+<!-- ═════════ HERO ═════════ -->
+<header class="hero" id="top">
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <p class="eyebrow rise">한빛+ 오픈 강좌 · 2026.10.22 / 10.29</p>
+      <h1 aria-label="개발자 없이, 4시간 뒤엔 내 업무를 AI가 대신합니다.">
+        <span class="hl-line" aria-hidden="true"><span class="hl-in">개발자 없이,</span></span>
+        <span class="hl-line" aria-hidden="true"><span class="hl-in"><span class="four"><span class="n" id="hero-hours">4</span>시간</span> 뒤엔</span></span>
+        <span class="hl-line" aria-hidden="true"><span class="hl-in"><span class="rot" id="hero-rot">내 업무를</span><span class="caret"></span></span></span>
+        <span class="hl-line" aria-hidden="true"><span class="hl-in"><span class="ai">AI</span>가 대신합니다.</span></span>
+      </h1>
+      <p class="lead rise">"AI 좋다는 건 알겠는데, 우리 일에 어떻게 쓰죠?" 그 답을 4시간 안에 직접 만들어 봅니다. 코딩을 몰라도 괜찮아요. 클로드 코드에게 "다음에 할 일"을 시키는 법을 배우면, 내 반복업무를 대신하는 도구가 손에 남습니다.</p>
+
+      <div class="hook rise" aria-label="반복업무 시간 계산">
+        <div class="hook-head"><span>매주 반복하는 그 업무</span><b>1년이면</b></div>
+        <div class="hook-body">
+          <div><span class="hook-k">이 강좌</span><span class="hook-v is-gain">4<small>시간</small></span></div>
+          <span class="hook-arrow" aria-hidden="true">vs</span>
+          <div><span class="hook-k">1년간 그 업무</span><span class="hook-v is-cost" id="hook-year">156<small>시간</small></span></div>
+        </div>
+        <div class="hook-bars" aria-hidden="true">
+          <div class="hook-bar is-class"><span>강좌 4시간</span><i id="bar-class" style="width:2.6%"></i></div>
+          <div class="hook-bar"><span>1년 반복업무</span><i id="bar-year" style="width:100%"></i></div>
+        </div>
+        <div class="hook-ctrl">
+          <label for="hook-range">매주 반복업무</label>
+          <input type="range" id="hook-range" min="1" max="10" step="1" value="3">
+          <output id="hook-out" for="hook-range">3시간</output>
+        </div>
+        <p class="hook-foot">4시간을 쓰면, <b>그 일부터 AI에게 넘깁니다.</b></p>
+      </div>
+
+      <div class="hero-cta rise">
+        <a class="btn btn--primary" href="#apply">지금 신청하기 →</a>
+        <a class="btn btn--ghost" href="#courses">두 과정 비교하기</a>
+      </div>
+      <div class="hero-meta rise">
+        <span class="chip"><s data-k="list">132,000원</s> <strong data-k="sale">88,000원</strong></span>
+        <span class="chip chip--brand">솔라 API 한빛 제공</span>
+        <span class="chip chip--brand">참가자 특전 3종</span>
+        <span class="chip">러닝 코치 2명</span>
+        <span class="chip">회차당 20명</span>
+      </div>
+    </div>
+
+    <figure class="kv">
+      <img src="hero-visual.webp" alt="문서·시트·슬라이드·설정 파일이 AI를 거쳐 완성된 보고서로 정리되는 흐름" width="804" height="941">
+      <svg class="kv-fx" viewBox="0 0 804 941" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+        <defs>
+          <clipPath id="kv-report"><path d="M522 293 H706 L750 337 V586 H522 Z"/></clipPath>
+          <linearGradient id="kv-sheen" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#e6fffb" stop-opacity=".85"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+        </defs>
+        <g>
+          <rect class="card" x="53" y="219" width="197" height="93" rx="4"/>
+          <rect class="card" x="53" y="339" width="197" height="93" rx="4"/>
+          <rect class="card" x="53" y="459" width="197" height="93" rx="4"/>
+          <rect class="card" x="53" y="579" width="197" height="93" rx="4"/>
+        </g>
+        <g>
+          <path class="flow" pathLength="100" d="M252 265 H278 Q293 265 293 280 V425 Q293 440 308 440 H334"/>
+          <path class="flow" pathLength="100" d="M252 385 H278 Q293 385 293 400 V425 Q293 440 308 440 H334"/>
+          <path class="flow" pathLength="100" d="M252 505 H278 Q293 505 293 490 V475 Q293 460 308 460 H334"/>
+          <path class="flow" pathLength="100" d="M252 625 H278 Q293 625 293 610 V475 Q293 460 308 460 H334"/>
+          <path class="flow out" pathLength="100" d="M464 452 H510"/>
+        </g>
+        <rect class="glow" x="318" y="372" width="156" height="158" rx="30"/>
+        <rect class="ring" x="333" y="389" width="126" height="126" rx="14"/>
+        <path class="spark" d="M432 404 L436 416 L448 420 L436 424 L432 436 L428 424 L416 420 L428 416 Z"/>
+        <g clip-path="url(#kv-report)"><rect class="sheen" x="440" y="280" width="140" height="320" fill="url(#kv-sheen)" transform="skewX(-18)"/></g>
+        <circle class="check" cx="578" cy="516" r="27"/>
+        <g class="burst"><line x1="713" y1="246" x2="716" y2="272"/><line x1="737" y1="280" x2="754" y2="259"/><line x1="747" y1="298" x2="773" y2="292"/></g>
+      </svg>
+    </figure>
+  </div>
+</header>
+
+<!-- ═════════ PROBLEM (dark) ═════════ -->
+<section class="section section--dark" id="problem">
+  <div class="wrap">
+    <p class="eyebrow">The problem</p>
+    <h2 class="h2">묻고, 복사하고, 붙여넣고.<br><span class="hl">그다음이 없습니다.</span></h2>
+    <div class="pain-grid">
+      <div class="pain"><q>ChatGPT에 물어보고 복사하는 것까지는 해요. 그다음이 없어요.</q><p>대화창은 답을 줄 뿐, 일을 대신하지 않습니다. 매번 같은 질문을 처음부터 다시 합니다.</p></div>
+      <div class="pain"><q>클로드 코드가 좋다는데, 터미널/파워셸 화면을 보는 순간 닫았어요.</q><p>까만 화면 앞에서 멈추는 건 당연합니다. 혼자 설치하다 막히는 게 가장 흔한 포기 지점이에요.</p></div>
+      <div class="pain"><q>만들고 싶은 건 있는데, 개발팀에 부탁하면 몇 달은 기다려야 해요.</q><p>좋은 아이디어가 개발 대기열에서 몇 달씩 기다리다 타이밍을 놓칩니다.</p></div>
+    </div>
+    <div class="reframe">
+      <strong>문제는 코딩 실력이 아니라,<br>"AI에게 무엇을 시켜야 할지 모르는 것"입니다.</strong>
+      <p>이 강좌는 그 능력 하나에 4시간을 씁니다. 기능을 넓게 훑는 대신, 내 업무 하나를 끝까지 만들어 봅니다.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════ APPROACH ═════════ -->
+<section class="section section--alt" id="approach">
+  <div class="wrap">
+    <p class="eyebrow">예제 말고, 내 일로</p>
+    <h2 class="h2">목요일에 만들고,<br><span class="hl">금요일 아침부터 바로</span> 씁니다.</h2>
+    <p class="lead">강사가 준비한 예제를 따라 하지 않습니다. 여러분이 가져온 내 업무를 그 자리에서 해결해 드립니다. 첫 20분에 오늘 끝낼 내 일 하나를 정하고, 그 일을 끝내는 데 필요한 만큼만 배웁니다. 4시간 뒤에는 수료증 대신 내 일을 하는 도구가 남습니다.</p>
+
+    <div class="timecard" aria-label="강좌 당일 흐름">
+      <div class="timecard-head"><span>예제 말고, 내 일로</span><b>목요일 → 금요일</b></div>
+      <ol>
+        <li class="tc-step"><span class="tc-time">목<b>13:30</b></span><span class="tc-text"><strong>내 일 하나 고르기</strong>반복되는 업무 하나를 가져옵니다</span></li>
+        <li class="tc-step"><span class="tc-time">목<b>17:30</b></span><span class="tc-text"><strong>그 일을 하는 도구 완성</strong>작동하는 v1이 손에 남습니다</span></li>
+        <li class="tc-step"><span class="tc-time">금<b>09:00</b></span><span class="tc-text"><strong>출근해서 바로 사용</strong>다음 날 아침부터 AI가 대신합니다</span></li>
+      </ol>
+    </div>
+
+    <div class="compare" role="table" aria-label="일반 AI 강의와 이 강좌 비교">
+      <div class="compare-row compare-head" role="row"><div role="columnheader">일반 AI 강의</div><div role="columnheader">예제 말고, 내 일로</div></div>
+      <div class="compare-row" role="row"><div role="cell">기능·개념을 순서대로 넓게 훑음</div><div role="cell">내 일 1개를 끝내는 데 필요한 것만 배움</div></div>
+      <div class="compare-row" role="row"><div role="cell">강사의 예제를 따라 만듦</div><div role="cell">내 업무를 재료로 직접 만듦</div></div>
+      <div class="compare-row" role="row"><div role="cell">막히면 진도가 먼저 나감</div><div role="cell">막히면 러닝 코치가 바로 옆에서 도움</div></div>
+      <div class="compare-row" role="row"><div role="cell">사용량이 떨어지면 실습 중단</div><div role="cell">솔라 API로 이어서 실습</div></div>
+      <div class="compare-row" role="row"><div role="cell">끝나면 "복습은 각자"</div><div role="cell">끝나면 작동하는 결과물이 손에 남음</div></div>
+    </div>
+    <p class="core"><b>핵심은 하나, "AI에게 다음으로 무엇을 시킬지 정하는 능력."</b> 오늘 배운 방식은 다음 업무에도 그대로 쓸 수 있습니다.</p>
+
+    <div class="nums" aria-label="숫자로 보는 강좌">
+      <div class="num"><b>4<em>h</em></b><span>반나절, 내 일 하나를 끝까지</span></div>
+      <div class="num"><b>10<em>:</em>1</b><span>수강생 10명당 러닝 코치 1명</span></div>
+      <div class="num"><b><em>₩</em>0</b><span>솔라 API 추가 비용</span></div>
+      <div class="num"><b>13<em>:</em>00</b><span>셋업 데스크 오픈, 설치 못 해도 OK</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════ COURSES ═════════ -->
+<section class="section" id="courses">
+  <div class="wrap">
+    <p class="eyebrow">Two courses · Level 1</p>
+    <h2 class="h2">내 일에 맞는 과정을<br>고르세요.</h2>
+    <p class="lead">두 과정은 내용이 다른 독립 과정입니다. 하나만 들어도, 둘 다 들어도 됩니다.</p>
+
+    <div class="course-grid">
+      <article class="course">
+        <div class="course-top">
+          <p class="course-date"><b>10.22 목</b> · 13:30–17:30</p>
+          <h3>업무자동화 편<span class="course-lv">LEVEL 1</span></h3>
+        </div>
+        <dl>
+          <div><dt>이런 분께</dt><dd>반복 보고·정리·조사 업무가 많은 직장인, 팀 도입을 검토하는 리더·CEO</dd></div>
+          <div><dt>가져가는 것</dt><dd>내 반복업무 1개를 대신하는 도구 + 다음부터 한 줄로 부르는 Skill</dd></div>
+          <div><dt>예시</dt><dd>VOC 500건 분석, 엑셀 50개 통합 대시보드, CEO 아침 브리핑</dd></div>
+          <div><dt>참가자 특전</dt><dd>설치 가이드 · 클로드 입문 치트 시트 · AI 템플릿 무료 제공</dd></div>
+        </dl>
+        <div class="course-foot">
+          <div class="price"><s data-k="list">132,000원</s><b data-k="sale">88,000원</b><small>VAT 포함</small></div>
+          <a class="btn btn--primary" href="#apply" data-apply="1022">10.22 신청</a>
+        </div>
+      </article>
+
+      <article class="course course--two">
+        <div class="course-top">
+          <p class="course-date"><b>10.29 목</b> · 13:30–17:30</p>
+          <h3>콘텐츠 제작 편<span class="course-lv">LEVEL 1</span></h3>
+        </div>
+        <dl>
+          <div><dt>이런 분께</dt><dd>글·카피·SNS·뉴스레터를 반복해서 만드는 마케터·에디터·기획자·강사·1인 크리에이터</dd></div>
+          <div><dt>가져가는 것</dt><dd>원고 1개를 채널별 콘텐츠로 바꾸는 파이프라인 + 나만의 문체 Skill</dd></div>
+          <div><dt>예시</dt><dd>에이전트 팀 1인 편집국, 영상 1편 → 콘텐츠 10종, 팀 카피 스튜디오</dd></div>
+          <div><dt>참가자 특전</dt><dd>설치 가이드 · 클로드 입문 치트 시트 · AI 템플릿 무료 제공</dd></div>
+        </dl>
+        <div class="course-foot">
+          <div class="price"><s data-k="list">132,000원</s><b data-k="sale">88,000원</b><small>VAT 포함</small></div>
+          <a class="btn btn--ink" href="#apply" data-apply="1029">10.29 신청</a>
+        </div>
+      </article>
+    </div>
+
+    <div class="bundle">
+      <p><strong>두 과정 모두 듣기</strong>업무자동화 편 + 콘텐츠 제작 편 · <span class="save" data-k="bundleSave">22,000원 할인</span></p>
+      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:14px">
+        <div class="price"><s data-k="bundleList">176,000원</s><b data-k="bundle">154,000원</b><small>VAT 포함</small></div>
+        <a class="btn btn--primary" href="#apply" data-apply="bundle">묶음 신청</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════ BONUS ═════════ -->
+<section class="section section--alt" id="bonus">
+  <div class="wrap">
+    <p class="eyebrow">Bonus · 참가자 특전</p>
+    <h2 class="h2">4시간으로 끝나지 않게,<br><span class="hl">가져가는 것이 더 있습니다.</span></h2>
+    <p class="lead">강좌가 끝난 뒤 혼자 해도 막히지 않도록, 참가자에게만 드리는 자료 세 가지를 무료로 드립니다.</p>
+
+    <div class="bonus-grid">
+      <article class="bonus">
+        <div class="doc" aria-hidden="true"><div class="doc-sheet"><div class="ln w60 hl"></div><div class="ln w90"></div><div class="ln w75"></div><div class="ln w90"></div><div class="ln w45"></div><div class="ln w75"></div></div><span class="ph-note">IMAGE · 표지 교체</span></div>
+        <p class="bonus-k"><b>특전 01</b><span>신청 후 발송</span></p>
+        <h3>참가자용 설치 가이드</h3>
+        <p>터미널/파워셸을 처음 여는 분도 따라 할 수 있게, 화면 캡처와 함께 한 단계씩 안내합니다.</p>
+        <ul><li>Mac·Windows 각각 따로</li><li>Claude Pro 가입부터 첫 실행까지</li><li>자주 막히는 지점과 해결법</li></ul>
+      </article>
+      <article class="bonus">
+        <div class="doc" aria-hidden="true"><div class="doc-sheet grid"><i></i><i></i><i></i><i></i><i></i><i></i></div><span class="ph-note">IMAGE · 표지 교체</span></div>
+        <p class="bonus-k"><b>특전 02</b><span>강좌 당일 제공</span></p>
+        <h3>클로드 입문 핵심 가이드 치트 시트</h3>
+        <p>강좌에서 쓴 명령어와 개념을 한 장에 담았습니다. 모니터 옆에 두고 다음 날부터 바로 꺼내 쓰세요.</p>
+        <ul><li>자주 쓰는 명령어와 모드</li><li>CLAUDE.md·Skill 한눈에 보기</li><li>막혔을 때 AI에게 던질 질문</li></ul>
+      </article>
+      <article class="bonus">
+        <div class="doc" aria-hidden="true"><div class="doc-sheet"><div class="ln w45 hl"></div><div class="ln w90"></div><div class="ln w60"></div><div class="ln w45 hl"></div><div class="ln w90"></div><div class="ln w30"></div></div><span class="ph-note">IMAGE · 표지 교체</span></div>
+        <p class="bonus-k"><b>특전 03</b><span>강좌 당일 제공</span></p>
+        <h3>업무에 바로 쓰는 AI 템플릿</h3>
+        <p>오늘 만든 방식을 다음 업무에 그대로 옮길 수 있도록, 복사해서 바로 쓰는 템플릿을 무료로 드립니다.</p>
+        <ul><li>기획서 인터뷰 템플릿</li><li>CLAUDE.md·Skill 템플릿</li><li>AI에게 비판받는 점검 템플릿</li></ul>
+      </article>
+    </div>
+
+    <div class="receipt" aria-label="88,000원에 포함된 것">
+      <h3>RECEIPT · 참가비에 포함된 것</h3>
+      <p class="meta">한빛+ 클로드 코드 오픈 강좌 · 1과정 기준</p>
+      <ul>
+        <li><span>4시간 실습 강좌</span><span>포함</span></li>
+        <li><span>러닝 코치 2명 (10 : 1)</span><span>포함</span></li>
+        <li><span>셋업 데스크 13:00</span><span>포함</span></li>
+        <li><span>업스테이지 솔라 API</span><span>₩0</span></li>
+        <li class="is-bonus"><span>특전 01 · 설치 가이드</span><span>무료</span></li>
+        <li class="is-bonus"><span>특전 02 · 클로드 입문 치트 시트</span><span>무료</span></li>
+        <li class="is-bonus"><span>특전 03 · AI 템플릿</span><span>무료</span></li>
+        <li><span>다음 단계 로드맵 1장</span><span>포함</span></li>
+        <li><span>내가 만든 도구 + Skill</span><span>내 것</span></li>
+      </ul>
+      <div class="total"><span>TOTAL · VAT 포함</span><b><s data-k="list">132,000원</s><span data-k="sale">88,000원</span></b></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════ CURRICULUM ═════════ -->
+<section class="section" id="curriculum">
+  <div class="wrap">
+    <p class="eyebrow">Curriculum · 4 hours</p>
+    <h2 class="h2">4시간, 이렇게 흘러갑니다.</h2>
+    <p class="lead">16시간짜리 개념 투어가 아닙니다. 결과물 1개를 만드는 데 꼭 필요한 것만 남기고, 나머지는 "다음 단계 로드맵"으로 챙겨 드립니다.</p>
+    <div class="tabs" role="tablist" aria-label="과정 선택" data-tabs="curr">
+      <button class="tab" role="tab" id="curr-tab-1022" aria-selected="true" aria-controls="curr-panel" data-key="1022"><small>10.22</small>업무자동화 편</button>
+      <button class="tab" role="tab" id="curr-tab-1029" aria-selected="false" aria-controls="curr-panel" data-key="1029"><small>10.29</small>콘텐츠 제작 편</button>
+    </div>
+    <div class="tl" id="curr-panel" role="tabpanel"></div>
+    <p class="tl-goal">오늘의 목표는 완벽함이 아니라, 작동하는 나만의 첫 결과물입니다.</p>
+  </div>
+</section>
+
+<!-- ═════════ PROJECTS ═════════ -->
+<section class="section section--alt" id="projects">
+  <div class="wrap">
+    <p class="eyebrow">Example projects</p>
+    <h2 class="h2">대화창으로는 못 하는 것까지,<br><span class="hl">4시간 안에.</span></h2>
+    <p class="lead">파일 수백 개를 한 번에 처리하고, 매일 아침 알아서 돌고, 동료에게 링크로 건네는 도구. 예시는 여기까지 갈 수 있다는 걸 보여줄 뿐입니다. 오늘 만드는 건 여러분이 가져온 내 일입니다.</p>
+    <div class="tabs" role="tablist" aria-label="과정 선택" data-tabs="proj">
+      <button class="tab" role="tab" id="proj-tab-1022" aria-selected="true" aria-controls="proj-panel" data-key="1022"><small>10.22</small>업무자동화 편</button>
+      <button class="tab" role="tab" id="proj-tab-1029" aria-selected="false" aria-controls="proj-panel" data-key="1029"><small>10.29</small>콘텐츠 제작 편</button>
+    </div>
+    <div class="legend"><span><b>A</b> 기본 완성 · 4시간 안에 누구나</span><span><b>B</b> 확장</span><span><b>C</b> 도전 · "이게 된다고?"</span></div>
+    <div class="proj-grid" id="proj-panel" role="tabpanel"></div>
+  </div>
+</section>
+
+<!-- ═════════ PROVIDE ═════════ -->
+<section class="section" id="provide">
+  <div class="wrap">
+    <p class="eyebrow">What Hanbit provides</p>
+    <h2 class="h2">멈추지 않게,<br>한빛이 세 가지를 챙깁니다.</h2>
+    <div class="pillars">
+      <div class="pillar pillar--solar">
+        <p class="pillar-k">Upstage Solar API · 추가 비용 0원</p>
+        <h3>솔라 API를 한빛이 제공합니다</h3>
+        <p>만든 앱 안에 AI 기능을 붙일 때, 같은 일을 Claude와 비교해 볼 때 씁니다. 수백 건을 분류하거나 카피 수십 개를 만드는 대량 작업도 솔라가 맡습니다.</p>
+        <p class="callout">Claude 사용량이 한도에 걸려도, 솔라로 실습을 이어갑니다.</p>
+      </div>
+      <div class="pillar">
+        <p class="pillar-k">Learning coach × 2</p>
+        <h3>러닝 코치 2명</h3>
+        <p>수강생 10명당 코치 1명. 막히는 순간 손을 들면 바로 옆으로 갑니다. 답을 대신 써 주지 않고, 다음 한 걸음을 함께 찾습니다.</p>
+        <p class="big">10 : 1</p>
+      </div>
+      <div class="pillar">
+        <p class="pillar-k">Setup desk · 13:00</p>
+        <h3>셋업 데스크</h3>
+        <p>신청하면 설치 가이드를 보내 드립니다. 터미널/파워셸이 낯설어 설치를 못 했어도 괜찮아요. 오후 1시부터 러닝 코치가 현장에서 함께 설치합니다.</p>
+        <p class="big">13:00 오픈</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════ COACHES ═════════ -->
+<section class="section section--alt" id="coaches">
+  <div class="wrap">
+    <p class="eyebrow">Learning coaches</p>
+    <h2 class="h2">강의하는 사람이 아니라,<br>옆에서 같이 만드는 코치.</h2>
+    <div class="coach-grid">
+      <article class="coach">
+        <div class="avatar"><span class="ph-note">PHOTO<br>교체</span></div>
+        <div>
+          <p class="coach-role">Main coach</p>
+          <h3>서현</h3>
+          <p>메인 코치. 시연과 전체 진행을 맡고, 수강생의 문제가 4시간 안에 끝나는 크기가 되도록 함께 다듬습니다.</p>
+          <p class="todo">프로필·경력·사진 추후 교체</p>
+        </div>
+      </article>
+      <article class="coach">
+        <div class="avatar"><span class="ph-note">PHOTO<br>교체</span></div>
+        <div>
+          <p class="coach-role">Assistant coach</p>
+          <h3>양불회</h3>
+          <p>어시스턴트 코치. 셋업 데스크와 실습 순회를 맡아, 막힌 자리를 바로 풀어 드립니다.</p>
+          <p class="todo">프로필·경력·사진 추후 교체</p>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════ FOR WHOM ═════════ -->
+<section class="section" id="for-whom">
+  <div class="wrap">
+    <p class="eyebrow">For whom</p>
+    <h2 class="h2">이런 분께 맞습니다.</h2>
+    <div class="who">
+      <div class="who-col who-yes">
+        <h3>이런 분께</h3>
+        <ul>
+          <li>AI는 쓰는데, 복사·붙여넣기에서 멈춰 있는 직장인</li>
+          <li>팀에 AI를 들이기 전에 직접 한 번 만들어 보고 싶은 리더·CEO</li>
+          <li>개발팀을 기다리지 않고 내 도구를 만들고 싶은 기획자·마케터</li>
+          <li>혼자 클로드 코드를 설치하다 포기해 본 분</li>
+        </ul>
+      </div>
+      <div class="who-col who-no">
+        <h3>이런 분께는 아님</h3>
+        <ul>
+          <li>기능과 개념을 이틀에 걸쳐 넓게 다 훑고 싶은 분</li>
+          <li>이미 에이전트 팀을 운영 중인 분 (Level 2를 준비 중입니다)</li>
+          <li>강의만 듣고 실습은 나중에 하려는 분</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════ REFERENCES (placeholder) ═════════ -->
+<section class="section section--alt" id="references">
+  <div class="wrap">
+    <p class="eyebrow">References</p>
+    <h2 class="h2">먼저 경험한 곳들.</h2>
+    <div class="refs">
+      <div class="ref"><p class="ph-note">［ 레퍼런스 자리 ］<br>기업·기관 사례 추후 교체</p></div>
+      <div class="ref"><p class="ph-note">［ 레퍼런스 자리 ］<br>참가자 결과물 추후 교체</p></div>
+      <div class="ref"><p class="ph-note">［ 레퍼런스 자리 ］<br>수강 후기 추후 교체</p></div>
+    </div>
+    <p class="trust">한빛미디어·한빛+ — 30년간 IT 지식을 책과 교육으로 옮겨 온 팀이 운영합니다.</p>
+  </div>
+</section>
+
+<!-- ═════════ PREPARE ═════════ -->
+<section class="section" id="prepare">
+  <div class="wrap">
+    <p class="eyebrow">What to bring</p>
+    <h2 class="h2">챙길 건 두 가지면 됩니다.</h2>
+    <dl class="prep">
+      <div><dt>노트북</dt><dd>본인 노트북 (Mac·Windows 모두 가능, 최근 3년 안에 산 제품이면 대부분 OK)</dd></div>
+      <div><dt>Claude 계정</dt><dd><b>Claude Pro 이상 구독 필요 (월 $17~)</b> · 상세 내용은 <a href="https://claude.com/pricing" target="_blank" rel="noopener">Claude 홈페이지</a> 참고. 신청 후 가입·결제 방법을 안내해 드려요.</dd></div>
+      <div><dt>설치</dt><dd>사전 설치 가이드를 보내 드립니다. 못 하셨다면 오후 1시 셋업 데스크로 오세요.</dd></div>
+      <div><dt>사전 지식</dt><dd>필요 없습니다. 코드 한 줄 몰라도 괜찮습니다.</dd></div>
+      <div><dt>장소</dt><dd>한빛빌딩 A동 강의실 40 · 서울 서대문구 연희로2길 62</dd></div>
+    </dl>
+  </div>
+</section>
+
+<!-- ═════════ FAQ ═════════ -->
+<section class="section section--alt" id="faq">
+  <div class="wrap">
+    <p class="eyebrow">FAQ</p>
+    <h2 class="h2">궁금한 것들.</h2>
+    <div class="faq">
+      <details><summary><span class="q">Q1</span>Claude 무료 계정으로도 되나요?</summary><p class="a">아니요. 클로드 코드는 Pro 이상 요금제부터 쓸 수 있어요. 신청 후 가입·결제 방법을 안내해 드립니다.</p></details>
+      <details><summary><span class="q">Q2</span>실습 중에 Claude 사용량이 떨어지면요?</summary><p class="a">한빛이 제공하는 업스테이지 솔라 API로 이어서 실습합니다. 추가 비용은 없습니다.</p></details>
+      <details><summary><span class="q">Q3</span>터미널/파워셸을 한 번도 안 써 봤어요.</summary><p class="a">괜찮아요. 사전 가이드를 보내 드리고, 그래도 안 되면 오후 1시 셋업 데스크에서 러닝 코치가 함께 설치합니다.</p></details>
+      <details><summary><span class="q">Q4</span>가져갈 업무가 딱히 떠오르지 않아요.</summary><p class="a">신청 후 "가져올 내 일 고르는 법"을 안내해 드립니다. 당일에 정하지 못해도 예시 프로젝트 중 하나로 시작할 수 있어요.</p></details>
+      <details><summary><span class="q">Q5</span>두 과정을 다 들어야 하나요?</summary><p class="a">아니요. 각각 독립된 Level 1 과정입니다. 둘 다 들으면 묶음가 154,000원(VAT 포함)이에요.</p></details>
+      <details><summary><span class="q">Q6</span>환불 규정은 어떻게 되나요?</summary><p class="a">［ 한빛+ 환불 규정 추후 교체 ］</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════ FINAL CTA ═════════ -->
+<section class="section section--dark final" id="apply">
+  <div class="wrap">
+    <p class="eyebrow">Apply · 회차당 20명</p>
+    <h2>목요일에 만들고,<br><span class="hl">금요일 아침부터 바로.</span></h2>
+    <p class="lead">회차당 20명, 선착순으로 조기 마감될 수 있습니다.</p>
+    <div class="final-grid">
+      <div class="final-card">
+        <p class="course-date"><b>10.22 목</b> · 13:30–17:30</p>
+        <h3>업무자동화 편</h3>
+        <div class="price"><s data-k="list">132,000원</s><b data-k="sale">88,000원</b><small>VAT 포함</small></div>
+        <a class="btn btn--primary" href="#apply" data-apply="1022">10.22 신청하기</a>
+      </div>
+      <div class="final-card">
+        <p class="course-date"><b>10.29 목</b> · 13:30–17:30</p>
+        <h3>콘텐츠 제작 편</h3>
+        <div class="price"><s data-k="list">132,000원</s><b data-k="sale">88,000원</b><small>VAT 포함</small></div>
+        <a class="btn btn--primary" href="#apply" data-apply="1029">10.29 신청하기</a>
+      </div>
+      <div class="final-card final-card--bundle">
+        <p class="course-date"><b>두 과정 모두</b> · <span data-k="bundleSave">22,000원 할인</span></p>
+        <h3>묶음 신청</h3>
+        <div class="price"><s data-k="bundleList">176,000원</s><b data-k="bundle">154,000원</b><small>VAT 포함</small></div>
+        <a class="btn btn--primary" href="#apply" data-apply="bundle">묶음 신청하기</a>
+      </div>
+    </div>
+    <div class="seats"><span><b>장소</b> 한빛빌딩 A동 강의실 40</span><span><b>셋업 데스크</b> 13:00</span><span><b>준비물</b> 노트북 + Claude Pro 계정</span><span><b>특전</b> 설치 가이드 · 치트 시트 · AI 템플릿</span></div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="wrap">
+    <a class="logo" href="https://www.hanbit.co.kr/" target="_blank" rel="noopener" aria-label="한빛+ 홈페이지로 이동"><img src="hanbit-logo.png" alt="한빛+" width="1042" height="333"></a>
+    <p><b>한빛+ 클로드 코드 오픈 강좌</b> · 한빛앤 디지털사업부 · <a href="https://www.hanbit.co.kr/" target="_blank" rel="noopener">hanbit.co.kr</a></p>
+    <p>서울 서대문구 연희로2길 62 · 문의 itmarketing@hanbit.co.kr</p>
+    <p>© 2026 HanbitN Inc.</p>
+  </div>
+</footer>
+
+<div class="dock" aria-label="빠른 신청">
+  <div class="price"><s data-k="list">132,000원</s><b data-k="sale">88,000원</b></div>
+  <a class="btn btn--primary" href="#apply">신청하기</a>
+</div>
+
+<script>
+/* ── 한 곳에서 바꾸는 설정: 가격·신청 링크 ─────────────
+   신청 링크는 한빛+ 결제 페이지 URL로 교체 (비워 두면 #apply로 이동) */
+const CONFIG = {
+  price: { list: 132000, sale: 88000, bundle: 154000 },
+  apply: { "1022": "", "1029": "", bundle: "" }
+};
+
+const won = n => n.toLocaleString("ko-KR") + "원";
+const P = CONFIG.price;
+const text = {
+  list: won(P.list), sale: won(P.sale), bundle: won(P.bundle),
+  bundleList: won(P.sale * 2), bundleSave: won(P.sale * 2 - P.bundle) + " 할인"
+};
+document.querySelectorAll("[data-k]").forEach(el => { if (text[el.dataset.k]) el.textContent = text[el.dataset.k]; });
+document.querySelectorAll("[data-apply]").forEach(el => {
+  const url = CONFIG.apply[el.dataset.apply];
+  if (url) { el.href = url; el.target = "_blank"; el.rel = "noopener"; }
+});
+
+/* ── 커리큘럼 데이터 ───────────────────────────── */
+const CURR = {
+  "1022": [
+    ["13:00–13:30","셋업 데스크 (선택)","사전 설치를 못 한 분을 러닝 코치가 현장에서 도와 드립니다","opt"],
+    ["13:30–13:50","오프닝 · 오늘 풀 내 일 고르기","내 반복업무 1개를 4시간 안에 끝나는 크기로 정합니다"],
+    ["13:50–14:20","꼭 필요한 개념만","Chat·Cowork·Code 차이, CLAUDE.md(/init), Plan·Auto 모드"],
+    ["14:20–15:00","시연 ① AI와 인터뷰하며 기획하기","AI가 먼저 질문하게 해서 기획서 1장을 만듭니다"],
+    ["15:00–15:10","휴식","","break"],
+    ["15:10–16:10","함께 만들기","업무자동화 도구 v1 완성, 솔라 API로 앱 안에 AI 기능 붙이기","key"],
+    ["16:10–16:40","시연 ② Skill로 저장하기","방금 한 작업을 Skill로 저장해 다음부터 한 줄로 부릅니다"],
+    ["16:40–17:05","AI에게 비판받고 고치기","약점 1개 개선, 같은 작업을 솔라와 Claude로 비교","key"],
+    ["17:05–17:30","발표 · 가져가기","GitHub에 저장, 다음 단계 로드맵(MCP·Agent·Hook) 1장"]
+  ],
+  "1029": [
+    ["13:00–13:30","셋업 데스크 (선택)","사전 설치를 못 한 분을 러닝 코치가 현장에서 도와 드립니다","opt"],
+    ["13:30–13:50","오프닝 · 오늘 풀 내 일 고르기","내가 반복해서 만드는 콘텐츠 1개를 정합니다"],
+    ["13:50–14:20","콘텐츠 작업실 꾸리기","자료·톤·산출물 폴더, CLAUDE.md에 브랜드 보이스 넣기"],
+    ["14:20–15:00","시연 ① 나만의 문체 Skill","내가 쓴 글 3개로 내 문체를 기억하는 Skill을 만듭니다"],
+    ["15:00–15:10","휴식","","break"],
+    ["15:10–16:10","함께 만들기 · 원고 하나로 여러 채널","원고 1개 → 블로그·뉴스레터·SNS 3종·카드뉴스(HTML)"],
+    ["16:10–16:40","솔라로 여러 버전 만들기","제목·카피 여러 버전을 솔라로 만들고 Claude와 비교해 A/B 후보 고르기","key"],
+    ["16:40–17:05","AI에게 비판받고 고치기","AI 티 검수와 팩트체크"],
+    ["17:05–17:30","발표 · 가져가기","다음 단계 로드맵(리서치 에이전트, 예약 발행 자동화) 1장"]
+  ]
+};
+
+/* ── 예시 프로젝트 데이터 [제목, before, after, A, B, C] ── */
+const PROJ = {
+  "1022": [
+    ["고객 목소리(VOC) 분석 대시보드","리뷰·문의 500건을 사람이 읽고 엑셀에 분류","파일을 넣으면 유형·감정·긴급도 대시보드","솔라로 500건 자동 분류","긴급 건 알림 + 유형별 대응 초안","매주 자동 실행, 지난주 대비 변화 리포트"],
+    ["흩어진 엑셀 50개 → 경영 대시보드","부서마다 양식이 다른 엑셀을 매달 복붙","폴더에 넣으면 합쳐지고 오류까지 검출","양식이 달라도 자동 병합 + 차트","숫자 불일치·누락 자동 검출","솔라가 이상 신호에 한 줄 코멘트"],
+    ["CEO 아침 브리핑 에이전트","메일·매출·뉴스를 아침마다 따로 확인","출근하면 1장짜리 브리핑이 와 있음","자료 폴더 → 브리핑 페이지","\"오늘 결정할 3가지\" 추출","매일 아침 자동 생성"],
+    ["제안요청서(RFP) 분석기","60쪽 RFP를 읽고 체크리스트 작성에 반나절","요구사항 표·적합도 점수·목차 초안","요구사항 체크리스트","우리 회사 적합도 점수","제안서 목차와 차별화 포인트"],
+    ["사내 규정 Q&A 봇","\"휴가 규정 어디 있어요?\" 같은 질문이 반복","근거 조항까지 답하는 웹앱","질문 → 답 + 근거 조항","동료가 쓰는 웹 화면","답 없는 질문을 모아 규정 개정안 제안"]
+  ],
+  "1029": [
+    ["1인 편집국 · 에이전트 팀","리서치·초안·검수를 혼자 다 함","기자·편집장·교정 에이전트가 역할을 나눠 발행본까지","주제 → 리서치 + 초안","편집장 에이전트가 비판하고 다시 쓰기","채널별 발행본 자동 생성"],
+    ["영상 1편 → 콘텐츠 10종","웨비나·유튜브 1편 재가공에 이틀","자막 파일을 넣으면 10종이 나옴","블로그·뉴스레터·SNS","쇼츠 대본 + 인용구 카드","발행 캘린더와 해시태그 전략"],
+    ["팀이 함께 쓰는 카피 스튜디오","카피를 팀원마다 다른 톤으로 씀","브랜드 문체가 들어간 웹앱에서 버튼 하나로","나만의 문체 Skill","솔라로 카피 20종 + Claude가 채점","웹에 배포해 팀원에게 URL 공유"],
+    ["경쟁 콘텐츠 레이더","경쟁사 블로그·뉴스를 일일이 확인","주제 트렌드 분석과 \"내가 쓸 주제 10개\"","수집 + 주제 분류","아무도 안 다룬 빈 주제 찾기","기획안 초안까지"],
+    ["원고 → 상세페이지 생성기","책·강의 원고로 상세페이지 만드는 데 일주일","상세페이지 HTML과 광고 카피","상세페이지 HTML","광고 카피 A/B 20종","타깃별 버전 분기"]
+  ]
+};
+
+const esc = s => s.replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c]));
+
+/* ── 예시 프로젝트 결과 화면 일러스트 (SVG, 한빛 토큰 색) ── */
+const svg = body => `<svg viewBox="0 0 320 150" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect class="alt" width="320" height="150"/>${body}</svg>`;
+const win = (x,y,w,h,label) => `<rect class="bg" x="${x}" y="${y}" width="${w}" height="${h}" rx="8"/><rect class="edge" x="${x+.5}" y="${y+.5}" width="${w-1}" height="${h-1}" rx="8"/><circle class="sl" cx="${x+10}" cy="${y+10}" r="2.5"/><circle class="sl" cx="${x+18}" cy="${y+10}" r="2.5"/><circle class="sl" cx="${x+26}" cy="${y+10}" r="2.5"/>${label ? `<text class="tm" x="${x+36}" y="${y+13}">${label}</text>` : ""}`;
+const THUMB = {
+  "1022": [
+    /* VOC 분석 대시보드: 도넛 + 유형 막대 + 긴급 배지 */
+    svg(`${win(14,12,292,126,"VOC DASHBOARD · 512건")}
+      <circle cx="70" cy="82" r="30" fill="none" stroke="var(--color-fill-normal)" stroke-width="12"/>
+      <circle cx="70" cy="82" r="30" fill="none" stroke="var(--color-primary-normal)" stroke-width="12" stroke-dasharray="85 104" transform="rotate(-90 70 82)"/>
+      <circle cx="70" cy="82" r="30" fill="none" stroke="var(--color-primary-heavy)" stroke-width="12" stroke-dasharray="40 149" stroke-dashoffset="-85" transform="rotate(-90 70 82)"/>
+      <circle cx="70" cy="82" r="30" fill="none" stroke="var(--color-status-negative)" stroke-width="12" stroke-dasharray="14 175" stroke-dashoffset="-125" transform="rotate(-90 70 82)"/>
+      <text class="tx" x="70" y="86" text-anchor="middle">512</text>
+      <text class="tm" x="122" y="44">배송</text><rect class="lt" x="150" y="37" width="110" height="8" rx="4"/><rect class="pri" x="150" y="37" width="92" height="8" rx="4"/>
+      <text class="tm" x="122" y="62">환불</text><rect class="lt" x="150" y="55" width="110" height="8" rx="4"/><rect class="heavy" x="150" y="55" width="58" height="8" rx="4"/>
+      <text class="tm" x="122" y="80">품질</text><rect class="lt" x="150" y="73" width="110" height="8" rx="4"/><rect class="pri" x="150" y="73" width="40" height="8" rx="4"/>
+      <text class="tm" x="122" y="98">기타</text><rect class="lt" x="150" y="91" width="110" height="8" rx="4"/><rect class="sl" x="150" y="91" width="24" height="8" rx="4"/>
+      <rect class="neg" x="122" y="108" width="72" height="20" rx="10"/><text class="tw" x="158" y="121" text-anchor="middle">긴급 12건</text>
+      <rect class="soft" x="200" y="108" width="92" height="20" rx="10"/><text class="tp" x="246" y="121" text-anchor="middle">대응 초안 12</text>`),
+    /* 엑셀 50개 → 대시보드 */
+    svg(`<g><rect class="bg" x="20" y="40" width="64" height="80" rx="6"/><rect class="edge" x="20.5" y="40.5" width="63" height="79" rx="6"/></g>
+      <g><rect class="bg" x="28" y="32" width="64" height="80" rx="6"/><rect class="edge" x="28.5" y="32.5" width="63" height="79" rx="6"/></g>
+      <g><rect class="bg" x="36" y="24" width="64" height="80" rx="6"/><rect class="edge" x="36.5" y="24.5" width="63" height="79" rx="6"/>
+      <rect class="soft" x="36" y="24" width="64" height="14" rx="6"/><text class="tp" x="44" y="34">XLSX ×50</text>
+      <rect class="lt" x="44" y="46" width="48" height="6"/><rect class="lt" x="44" y="56" width="48" height="6"/><rect class="lt" x="44" y="66" width="48" height="6"/><rect class="lt" x="44" y="76" width="48" height="6"/><rect class="lt" x="44" y="86" width="48" height="6"/></g>
+      <path class="wire" d="M112 75 H136 M128 67 l8 8 -8 8"/>
+      ${win(148,14,158,122,"경영 대시보드")}
+      <polyline class="wire" points="162,108 186,94 208,100 232,72 256,80 290,50"/>
+      <circle class="pri" cx="290" cy="50" r="4"/>
+      <rect class="lt" x="162" y="114" width="128" height="1"/>
+      <rect class="cau" x="162" y="34" width="70" height="18" rx="9"/><text class="tw" x="197" y="46" text-anchor="middle">불일치 3건</text>
+      <text class="tm" x="240" y="46">자동 검출</text>`),
+    /* CEO 아침 브리핑 */
+    svg(`<rect class="bg" x="60" y="10" width="200" height="132" rx="8"/><rect class="edge" x="60.5" y="10.5" width="199" height="131" rx="8"/>
+      <rect class="dark" x="60" y="10" width="200" height="26" rx="8"/><rect class="dark" x="60" y="26" width="200" height="10"/>
+      <text class="tw" x="72" y="27">오늘의 브리핑</text><text x="248" y="27" text-anchor="end" style="fill:var(--color-primary-normal);font:600 9px var(--font-mono)">07:30</text>
+      <rect class="soft" x="72" y="46" width="54" height="34" rx="6"/><text class="tm" x="78" y="58">매출</text><text class="tp" x="78" y="73">+4.2%</text>
+      <rect class="lt" x="133" y="46" width="54" height="34" rx="6"/><text class="tm" x="139" y="58">문의</text><text class="tx" x="139" y="73">128</text>
+      <rect class="lt" x="194" y="46" width="54" height="34" rx="6"/><text class="tm" x="200" y="58">메일</text><text class="tx" x="200" y="73">23</text>
+      <text class="tx" x="72" y="98">오늘 결정할 3가지</text>
+      <rect class="pri" x="72" y="105" width="8" height="8" rx="2"/><rect class="sl" x="86" y="107" width="120" height="5" rx="2"/>
+      <rect class="pri" x="72" y="118" width="8" height="8" rx="2"/><rect class="sl" x="86" y="120" width="96" height="5" rx="2"/>
+      <rect class="pri" x="72" y="131" width="8" height="8" rx="2"/><rect class="sl" x="86" y="133" width="108" height="5" rx="2"/>`),
+    /* RFP 분석기 */
+    svg(`${win(14,12,180,126,"RFP · 60쪽")}
+      ${[40,58,76,94,112].map((y,k)=>`<rect class="${k===3?"cau":"pri"}" x="28" y="${y}" width="10" height="10" rx="3"/><rect class="sl" x="46" y="${y+2}" width="${[120,96,132,88,110][k]}" height="6" rx="3"/>`).join("")}
+      <rect class="bg" x="206" y="12" width="100" height="126" rx="8"/><rect class="edge" x="206.5" y="12.5" width="99" height="125" rx="8"/>
+      <text class="tm" x="256" y="32" text-anchor="middle">적합도</text>
+      <path d="M226 92 A30 30 0 0 1 286 92" fill="none" stroke="var(--color-fill-normal)" stroke-width="9" stroke-linecap="round"/>
+      <path d="M226 92 A30 30 0 0 1 280 74" fill="none" stroke="var(--color-primary-normal)" stroke-width="9" stroke-linecap="round"/>
+      <text x="256" y="90" text-anchor="middle" style="fill:var(--color-label-normal);font:700 18px var(--font-mono)">82</text>
+      <rect class="soft" x="220" y="108" width="72" height="18" rx="9"/><text class="tp" x="256" y="120" text-anchor="middle">목차 초안</text>`),
+    /* 사내 규정 Q&A 봇 */
+    svg(`${win(40,10,240,130,"사내 규정 봇")}
+      <rect class="lt" x="130" y="34" width="136" height="26" rx="12"/><text class="tx" x="142" y="51">연차 이월 되나요?</text>
+      <rect class="soft" x="54" y="70" width="180" height="40" rx="12"/>
+      <rect class="heavy" x="66" y="80" width="130" height="6" rx="3"/><rect class="pri" x="66" y="92" width="100" height="6" rx="3"/>
+      <rect class="dark" x="54" y="116" width="76" height="16" rx="8"/><text class="tw" x="92" y="127" text-anchor="middle">근거 제12조</text>
+      <rect class="lt" x="136" y="116" width="60" height="16" rx="8"/><text class="tm" x="166" y="127" text-anchor="middle">취업규칙</text>`)
+  ],
+  "1029": [
+    /* 1인 편집국 · 에이전트 팀 */
+    svg(`${[["기자",60],["편집장",160],["교정",260]].map(([n,x],k)=>`<circle class="${k===1?"dark":"bg"}" cx="${x}" cy="52" r="24"/><circle class="edge" cx="${x}" cy="52" r="23.5"/><text class="${k===1?"tw":"tx"}" x="${x}" y="56" text-anchor="middle">${n}</text>`).join("")}
+      <path class="wire" d="M86 52 H132 M126 46 l6 6 -6 6 M186 52 H232 M226 46 l6 6 -6 6"/>
+      <path class="wire-m" d="M160 78 C160 96 60 96 60 80"/><text class="tm" x="110" y="104" text-anchor="middle">비판 → 다시 쓰기</text>
+      ${["블로그","뉴스레터","SNS"].map((n,k)=>`<rect class="${k===0?"pri":"bg"}" x="${150+k*52}" y="112" width="46" height="24" rx="6"/>${k?`<rect class="edge" x="${150.5+k*52}" y="112.5" width="45" height="23" rx="6"/>`:""}<text class="${k===0?"tw":"tx"}" x="${173+k*52}" y="128" text-anchor="middle" style="font-size:8px">${n}</text>`).join("")}
+      <path class="wire" d="M260 78 V104"/>`),
+    /* 영상 1편 → 콘텐츠 10종 */
+    svg(`<rect class="dark" x="16" y="30" width="108" height="72" rx="8"/><circle cx="70" cy="66" r="16" fill="var(--color-primary-normal)"/><path d="M65 58 L78 66 L65 74 Z" fill="#fff"/>
+      <rect x="24" y="92" width="92" height="3" rx="1.5" fill="var(--color-line-inverse)"/><rect class="pri" x="24" y="92" width="40" height="3" rx="1.5"/>
+      <text class="tm" x="70" y="118" text-anchor="middle">웨비나 · 52분</text>
+      <path class="wire" d="M134 66 H156 M150 60 l6 6 -6 6"/>
+      ${Array.from({length:10},(_,k)=>{const cx=166+(k%5)*28, cy=30+Math.floor(k/5)*48;return `<rect class="${k===0||k===6?"pri":k===3?"dark":"bg"}" x="${cx}" y="${cy}" width="24" height="40" rx="5"/>${k===0||k===6||k===3?"":`<rect class="edge" x="${cx+.5}" y="${cy+.5}" width="23" height="39" rx="5"/><rect class="sl" x="${cx+5}" y="${cy+8}" width="14" height="3" rx="1.5"/><rect class="lt" x="${cx+5}" y="${cy+15}" width="12" height="3" rx="1.5"/>`}`}).join("")}
+      <text class="tp" x="232" y="138" text-anchor="middle">콘텐츠 10종</text>`),
+    /* 팀 카피 스튜디오 웹앱 */
+    svg(`${win(14,10,292,130,"copy-studio.hanbit.app")}
+      <rect class="lt" x="28" y="30" width="186" height="22" rx="6"/><text class="tm" x="38" y="44">신간 알림 · 우리 브랜드 톤</text>
+      <rect class="pri" x="222" y="30" width="70" height="22" rx="6"/><text class="tw" x="257" y="44" text-anchor="middle">20종 생성</text>
+      ${[[94,"Claude 94",true],[88,"Solar 88",false],[81,"Solar 81",false]].map(([s,l,top],k)=>`<rect class="${top?"soft":"bg"}" x="28" y="${62+k*24}" width="264" height="20" rx="5"/>${top?"":`<rect class="edge" x="28.5" y="${62.5+k*24}" width="263" height="19" rx="5"/>`}<rect class="sl" x="38" y="${69+k*24}" width="${150-k*20}" height="6" rx="3"/><text class="${top?"tp":"tm"}" x="282" y="${75+k*24}" text-anchor="end">${l}</text>`).join("")}`),
+    /* 경쟁 콘텐츠 레이더 */
+    svg(`${win(14,10,292,130,"경쟁 콘텐츠 · 이번 주 214건")}
+      <rect class="lt" x="30" y="32" width="170" height="96" rx="6"/>
+      <rect x="34" y="36" width="80" height="44" rx="6" fill="rgba(3,174,160,.12)" stroke="var(--color-primary-normal)" stroke-dasharray="3 3"/>
+      <text class="tp" x="74" y="62" text-anchor="middle">빈 주제</text>
+      ${[[130,50],[150,62],[168,44],[140,90],[172,100],[120,108],[188,80],[156,116],[96,110],[180,58],[110,92]].map(([x,y])=>`<circle class="sl" cx="${x}" cy="${y}" r="5"/>`).join("")}
+      <circle class="pri" cx="62" cy="50" r="4"/><circle class="pri" cx="92" cy="66" r="4"/>
+      <text class="tx" x="214" y="44">내가 쓸 주제</text>
+      ${[0,1,2,3].map(k=>`<text class="tp" x="214" y="${62+k*18}" style="font-family:var(--font-mono)">0${k+1}</text><rect class="sl" x="230" y="${56+k*18}" width="${[56,48,60,40][k]}" height="6" rx="3"/>`).join("")}`),
+    /* 원고 → 상세페이지 */
+    svg(`<rect class="bg" x="30" y="22" width="84" height="108" rx="4"/><rect class="edge" x="30.5" y="22.5" width="83" height="107" rx="4"/>
+      <text class="tm" x="40" y="38">원고.docx</text>
+      ${[46,54,62,70,78,86,94,102,110].map((y,k)=>`<rect class="lt" x="40" y="${y}" width="${[64,60,64,52,64,58,64,44,56][k]}" height="4" rx="2"/>`).join("")}
+      <path class="wire" d="M124 76 H148 M142 70 l6 6 -6 6"/>
+      <rect class="bg" x="160" y="8" width="130" height="136" rx="8"/><rect class="edge" x="160.5" y="8.5" width="129" height="135" rx="8"/>
+      <rect class="dark" x="160" y="8" width="130" height="50" rx="8"/><rect class="dark" x="160" y="40" width="130" height="18"/>
+      <rect x="172" y="20" width="70" height="8" rx="4" fill="#fff"/><rect x="172" y="33" width="50" height="5" rx="2.5" fill="var(--color-line-inverse)"/>
+      <rect class="pri" x="172" y="44" width="40" height="9" rx="4.5"/>
+      <rect class="soft" x="172" y="68" width="50" height="34" rx="5"/><rect class="lt" x="228" y="68" width="50" height="34" rx="5"/>
+      <rect class="sl" x="172" y="110" width="106" height="5" rx="2.5"/><rect class="lt" x="172" y="120" width="86" height="5" rx="2.5"/>
+      <rect class="cau" x="236" y="128" width="42" height="11" rx="5.5"/><text class="tw" x="257" y="136" text-anchor="middle" style="font-size:7px">A/B 20</text>`)
+  ]
+};
+
+function renderCurr(key){
+  document.getElementById("curr-panel").innerHTML = CURR[key].map(([t,title,desc,flag]) =>
+    `<div class="tl-row${flag ? " is-" + flag : ""}"><span class="tl-time">${t}</span><span class="tl-title">${esc(title)}</span><span class="tl-desc">${esc(desc)}</span></div>`
+  ).join("");
+}
+function renderProj(key){
+  const cards = PROJ[key].map(([title,before,after,a,b,c], i) => `
+    <article class="proj">
+      <div class="proj-thumb" role="img" aria-label="${esc(title)} 결과 화면 예시">${THUMB[key][i]}</div>
+      <h3>${esc(title)}</h3>
+      <div class="ba">
+        <div><span class="k">Before</span><span class="v">${esc(before)}</span></div>
+        <div class="after"><span class="k">After</span><span class="v">${esc(after)}</span></div>
+      </div>
+      <ul class="ladder"><li><b>A</b>${esc(a)}</li><li><b>B</b>${esc(b)}</li><li><b>C</b>${esc(c)}</li></ul>
+    </article>`).join("");
+  const cta = `
+    <article class="proj proj--cta">
+      <div><h3>여섯 번째 칸은<br>여러분의 일입니다.</h3>
+      <p style="margin-top:12px">예시는 여기까지 갈 수 있다는 걸 보여줄 뿐입니다. 오늘 만드는 건 여러분이 가져온 내 일이에요.</p></div>
+      <a class="btn btn--primary" href="#apply">내 일 가져가기 →</a>
+    </article>`;
+  document.getElementById("proj-panel").innerHTML = cards + cta;
+}
+
+const RENDER = { curr: renderCurr, proj: renderProj };
+document.querySelectorAll("[data-tabs]").forEach(list => {
+  const name = list.dataset.tabs;
+  const tabs = [...list.querySelectorAll('[role="tab"]')];
+  const select = tab => {
+    tabs.forEach(t => { const on = t === tab; t.setAttribute("aria-selected", on); t.tabIndex = on ? 0 : -1; });
+    document.getElementById(tab.getAttribute("aria-controls")).setAttribute("aria-labelledby", tab.id);
+    RENDER[name](tab.dataset.key);
+  };
+  tabs.forEach((t, i) => {
+    t.addEventListener("click", () => select(t));
+    t.addEventListener("keydown", e => {
+      if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+      const next = tabs[(i + (e.key === "ArrowRight" ? 1 : tabs.length - 1)) % tabs.length];
+      next.focus(); select(next);
+    });
+  });
+  select(tabs[0]);
+});
+
+/* ── 히어로: 4시간 카운트 · 업무 이름 타이핑 · 반복업무 계산 ── */
+(() => {
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  const hours = document.getElementById("hero-hours");
+  if (!reduce) {
+    let n = 0; hours.textContent = "0";
+    setTimeout(function tick(){ n++; hours.textContent = n; if (n < 4) setTimeout(tick, 150); }, 650);
+  }
+
+  const rot = document.getElementById("hero-rot");
+  const words = ["주간 보고를","엑셀 취합을","VOC 분류를","회의록 정리를","콘텐츠 제작을","내 업무를"];
+  if (!reduce) {
+    let w = 0;
+    const type = (word, i = 0) => {
+      rot.textContent = word.slice(0, i);
+      if (i < word.length) return setTimeout(() => type(word, i + 1), 90);
+      setTimeout(erase, word === "내 업무를" ? 3200 : 1500);
+    };
+    const erase = () => {
+      const t = rot.textContent;
+      if (t.length) { rot.textContent = t.slice(0, -1); return setTimeout(erase, 45); }
+      w = (w + 1) % words.length; setTimeout(() => type(words[w]), 200);
+    };
+    setTimeout(erase, 2600);
+  }
+
+  const card = document.querySelector(".hook");
+  const range = document.getElementById("hook-range");
+  const out = document.getElementById("hook-out");
+  const year = document.getElementById("hook-year");
+  const barClass = document.getElementById("bar-class");
+  const barYear = document.getElementById("bar-year");
+  let shown = 156, raf = 0, touched = false;
+
+  const setYear = v => { year.innerHTML = v + "<small>시간</small>"; };
+  const animateTo = (target, dur = 500) => {
+    cancelAnimationFrame(raf);
+    const from = shown, t0 = performance.now();
+    if (reduce || !dur) { shown = target; setYear(target); return; }
+    const step = now => {
+      const p = Math.min(1, (now - t0) / dur);
+      shown = Math.round(from + (target - from) * (1 - Math.pow(1 - p, 3)));
+      setYear(shown);
+      if (p < 1) raf = requestAnimationFrame(step);
+    };
+    raf = requestAnimationFrame(step);
+  };
+  const update = (dur) => {
+    const h = +range.value, y = h * 52;
+    out.textContent = h + "시간";
+    barClass.style.width = Math.max(1.5, 4 / y * 100) + "%";
+    animateTo(y, dur);
+    year.classList.remove("bump"); void year.offsetWidth; year.classList.add("bump");
+  };
+  const stopDemo = () => { touched = true; range.classList.remove("nudge"); };
+  range.addEventListener("pointerdown", stopDemo);
+  range.addEventListener("keydown", stopDemo);
+  range.addEventListener("input", () => update());
+
+  /* 카드가 보이면: 막대 성장 → 156 카운트 → 슬라이더 시연(1→6→3) → 슬라이더 반짝 */
+  const play = () => {
+    if (reduce) return;
+    card.classList.add("play");
+    barClass.style.width = "0%"; barYear.style.width = "0%";
+    shown = 0; setYear(0);
+    setTimeout(() => { barClass.style.width = "2.6%"; }, 750);
+    setTimeout(() => { barYear.style.width = "100%"; animateTo(156, 900); }, 850);
+    const seq = [2,3,4,5,6,5,4,3];
+    setTimeout(() => {
+      range.value = 1; update(160);
+      seq.forEach((v, i) => setTimeout(() => {
+        if (touched) return;
+        range.value = v; update(160);
+        if (i === seq.length - 1) range.classList.add("nudge");
+      }, 220 * (i + 1)));
+    }, 2400);
+  };
+  if ("IntersectionObserver" in window) {
+    const io = new IntersectionObserver(es => {
+      if (es.some(e => e.isIntersecting)) { io.disconnect(); play(); }
+    }, { threshold: .45 });
+    io.observe(card);
+  } else play();
+})();
+</script>
+
+</body>
+</html>
