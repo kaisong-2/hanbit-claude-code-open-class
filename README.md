@@ -9,7 +9,7 @@
 ## 구성
 - `index.html` — 단일 파일 랜딩페이지 (인라인 CSS/JS, 한빛 디자인 시스템 토큰)
 - `hanbit-logo.png` — 한빛+ 로고
-- `hero-visual.webp` — 히어로 키비주얼 (한빛 틸 톤)
+- `hero2-visual.webp` — 히어로 일러스트 (한빛 틸 톤, 캔버스 애니메이션 오버레이)
 
 ## 수정 포인트
 - 가격·신청 링크: `index.html` 하단 `CONFIG` 객체 (`apply`에 한빛+ 결제 URL 3개 입력)
